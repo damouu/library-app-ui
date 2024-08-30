@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-primary">
+  <div>
     <button class="btn rounded">
       <i class="bi bi-list h4"></i>
     </button>

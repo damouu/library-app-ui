@@ -3,10 +3,10 @@
     <thead>
     <tr>
       <th scope="col">uuid</th>
-      <th scope="col">名前</th>
-      <th scope="col">メール</th>
-      <th scope="col">生年月日</th>
-      <th scope="col">アイコン</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Birth date</th>
+      <th scope="col">Icon</th>
     </tr>
     </thead>
     <tbody>

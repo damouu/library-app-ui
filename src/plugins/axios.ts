@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const instance = axios.create({
     baseURL: 'http://localhost:8080/api',
@@ -8,6 +8,6 @@ const instance = axios.create({
         'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
         'Access-Control-Allow-Credentials': true
     },
-})
+});
 
-export default instance
+export default instance;

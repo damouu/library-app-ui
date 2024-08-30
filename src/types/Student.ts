@@ -3,9 +3,9 @@ export class Student {
     private _name: string;
     private _email: string;
     private _dob: string;
-    private _studentIdCard?: String;
+    private _studentIdCard?: string;
 
-    constructor(uuid: string, name: string, email: string, dob: string, studentIdCard: String) {
+    constructor(uuid: string, name: string, email: string, dob: string, studentIdCard: string) {
         this._uuid = uuid;
         this._name = name;
         this._email = email;

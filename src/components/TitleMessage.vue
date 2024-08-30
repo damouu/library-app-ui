@@ -1,5 +1,5 @@
 <template>
-  <H2 class="text-warning text-center mb-5 mt-5">{{ props.title }}</H2>
+  <H2 class="text-primary-emphasis text-center mb-5 mt-5">{{ props.title }}</H2>
 </template>
 
 <script setup lang="ts">
