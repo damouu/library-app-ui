@@ -1,5 +1,5 @@
 <template>
-  <div class="row row-cols-1 row-cols-md-5 g-4 mb-5" ref="scrollComponent">
+  <div class="row row-cols-md-6 gy-5" ref="scrollComponent">
     <div v-for="book in bookStore.bookList" :key="book.uuid">
       <div class="col">
         <div class="card" style="width: 18rem;">
