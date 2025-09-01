@@ -62,11 +62,11 @@ export const useBookStore = defineStore('book', () => {
     async function fetchMoreBooksTitle(title) {
         try {
             await axios.get('/book' + '?page=' + (pageNumber.value += 1) + '&size=' + sizeNumber.value, {params: {title: title}}).then(response => {
-                bookListTitle.length = 0
+                bookListTitle.length = 0;
                 response.data.forEach(book => {
                     bookListTitle.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
                 });
-            })
+            });
             return Promise.resolve(200);
         } catch (e) {
             return Promise.reject("error");
@@ -90,9 +90,9 @@ export const useBookStore = defineStore('book', () => {
                 book.genre = response.data.book.genre;
                 book.created_at = response.data.book.created_at;
                 book.totalPages = response.data.book.total_pages;
-                book.publisher = response.data.book.publisher
+                book.publisher = response.data.book.publisher;
                 if (response.data.studentCard.studentCardUUID) {
-                    book.studentIdCard = response.data.studentCard.studentCardUUID
+                    book.studentIdCard = response.data.studentCard.studentCardUUID;
                 }
             });
             return Promise.resolve(book);
@@ -111,12 +111,12 @@ export const useBookStore = defineStore('book', () => {
      */
     async function getBookTitle(title) {
         try {
-            await axios.get('/book/search?search=' + title).then(response => {
-                bookListTitle.length = 0
+            await axios.get('/book/search?title=' + title).then(response => {
+                bookListTitle.length = 0;
                 response.data.forEach(book => {
                     bookListTitle.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
                 });
-            })
+            });
             return Promise.resolve(200);
         } catch (e) {
             return Promise.reject("error");
