@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <nav class="navbar navbar-expand-lg navbar-light bg-success position-fixed fixed-top">
-      <ButtonCheck/>
+      <BorrowButton/>
       <div class="gx-3 mx-auto" id="navbarSupportedContent">
         <ul class="navbar-nav mb-2 mb-lg-0 text-center mt-2">
           <li class="nav-item me-3">
@@ -34,6 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import ButtonCheck from "@/components/ButtonCheck.vue";
+import BorrowButton from "@/components/BorrowButton.vue";
 import FormSearch from "@/components/FormSearch.vue";
 </script>
