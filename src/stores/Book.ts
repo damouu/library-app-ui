@@ -6,11 +6,11 @@ import {errors} from "msw";
 export const useBookStore = defineStore('book', () => {
 
         const axios = inject('axios');
-        const pageNumber: Number = ref(0);
-        const sizeNumber: Number = ref(20);
+        const pageNumber: number = ref(0);
+        const sizeNumber: number = ref(20);
         const book: Book = reactive<Book>({});
         const bookList: Array<Book> = reactive<Book[]>([]);
-        let bookListTitle: Array<Book> = reactive<Book[]>([]);
+        const bookListTitle: Array<Book> = reactive<Book[]>([]);
 
         /**
          * fetches to the database through an HTTP request, a specific research by passing an integer named pageNumber and
@@ -27,7 +27,7 @@ export const useBookStore = defineStore('book', () => {
                     response.data.forEach(book => {
                         bookList.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
                     });
-                })
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -46,7 +46,7 @@ export const useBookStore = defineStore('book', () => {
                     response.data.forEach(book => {
                         bookList.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
                     });
-                })
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -63,11 +63,11 @@ export const useBookStore = defineStore('book', () => {
         async function fetchMoreBooksTitle(title) {
             try {
                 await axios.get('/book' + '?page=' + (pageNumber.value += 1) + '&size=' + sizeNumber.value, {params: {title: title}}).then(response => {
-                    bookListTitle.length = 0
+                    bookListTitle.length = 0;
                     response.data.forEach(book => {
                         bookListTitle.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
                     });
-                })
+                });
                 return Promise.resolve(200);
             } catch (e) {
                 return Promise.reject("error");
@@ -91,18 +91,18 @@ export const useBookStore = defineStore('book', () => {
                     book.genre = response.data.book.genre;
                     book.created_at = response.data.book.created_at;
                     book.totalPages = response.data.book.total_pages;
-                    book.publisher = response.data.book.publisher
+                    book.publisher = response.data.book.publisher;
                     if (response.data.studentCard.studentCardUUID) {
-                        book.studentIdCard = response.data.studentCard.studentCardUUID
+                        book.studentIdCard = response.data.studentCard.studentCardUUID;
                     }
-                })
+                });
             } catch (e) {
-                return e
+                return e;
             }
         }
 
         /**
-         * searches for a specific book by the given UUID passes as a parameter if the given UUID exist in the database.
+         * クエリパラメータに入力された本のタイトルで本を検察するの関数です。
          *
          * @author damouu <mouadsehbaoui@gmail.com>
          * @param {string} title - the title of a given book.
@@ -111,17 +111,17 @@ export const useBookStore = defineStore('book', () => {
          */
         async function getBookTitle(title: string): Promise<Book> {
             try {
-                await axios.get('/book/search?search=' + title).then(response => {
-                    bookListTitle.length = 0
+                await axios.get('/book/search?title=' + title).then(response => {
+                    bookListTitle.length = 0;
                     response.data.forEach(book => {
                         bookListTitle.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
                     });
-                })
+                });
             } catch (e) {
                 return false;
             }
         }
 
-        return {bookList, fetchMoreBooks, getBooks, getBookUUID, book, getBookTitle, bookListTitle, fetchMoreBooksTitle}
+        return {bookList, fetchMoreBooks, getBooks, getBookUUID, book, getBookTitle, bookListTitle, fetchMoreBooksTitle};
     }
-)
+);
