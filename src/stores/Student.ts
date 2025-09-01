@@ -4,11 +4,11 @@ import {Student} from "@/types/Student";
 
 export const useStudentStore = defineStore('student', () => {
     const axios = inject('axios');
-    const sizeNumber: Number = ref(10);
+    const sizeNumber: number = ref(10);
     const student: Student = reactive<Student>({});
     const studentList: Array<Student> = reactive<Student[]>([]);
 
-    async function getStudents(page: Number): void {
+    async function getStudents(page: number): void {
         try {
             await axios.get('/student' + '?page=' + page + '&size=' + sizeNumber.value).then(response => {
                 response.data.forEach(student => {
@@ -20,13 +20,13 @@ export const useStudentStore = defineStore('student', () => {
                     }
                     studentList.push(new Student(student.uuid, student.name, student.email, student.dob, cardUuid));
                 });
-            })
+            });
         } catch (error) {
             return error;
         }
     }
 
-    async function getStudentIdCard(studentIdCard: String): Promise {
+    async function getStudentIdCard(studentIdCard: string): Promise {
         try {
             await axios.get('/api/studentCard/' + studentIdCard).then(response => {
                 student.uuid = response.data.student.uuid;
@@ -40,5 +40,5 @@ export const useStudentStore = defineStore('student', () => {
         }
     }
 
-    return {studentList, getStudents, getStudentIdCard}
-})
+    return {studentList, getStudents, getStudentIdCard};
+});
