@@ -19,6 +19,7 @@ a,
     transition: 0.4s;
 }
 
+
 @media (hover: hover) {
     a:hover {
         background-color: hsla(160, 100%, 37%, 0.2);
@@ -30,3 +31,56 @@ body {
     place-items: center;
 }
 
+
+.my-cart-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.my-cart-dropdown::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+
+.my-cart-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    width: 320px;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0.6rem;
+    max-height: 500px;
+}
+
+
+.cart-scroll-container {
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+}
+
+.cart-item-snap {
+    scroll-snap-align: start;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item-img {
+    width: auto;
+    height: auto;
+}
+
+.cart-thumb {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background-color: #f8f9fa;
+}
+
+.min-width-0 {
+    min-width: 0; /* Essential for text-truncate to work inside a flexbox */
+}
