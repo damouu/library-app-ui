@@ -21,7 +21,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       - run: npm ci
+
       - run: npm run test
         name: Execute Unit tests
 
@@ -48,20 +56,17 @@ jobs:
       #          github_token: ${{ secrets.GITHUB_TOKEN }}
       #          commit_prefix: ${{ github.event.head_commit.message }} Show-stopper TestFailed
 
-      - name: TestsPassed
-        if: ${{ success() }}
-        run: git commit --amend -m "Done TestsPassed"
 
-#      - name: pull-request
-#        if: ${{ success() }}
-#        uses: repo-sync/pull-request@v2
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.MYWORKFLOW  }}
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.MYWORKFLOW  }}
-#          source_branch: "test"
-#          destination_branch: "main"
-#          pr_title: ${{ github.event.head_commit.message }}
-#          pr_body: ${{ github.event.head_commit.message }}
-#          pr_label: "Staging,TestsPassed"
-#          pr_assignee: "damouu"
+      - name: pull-request
+        if: ${{ success() }}
+        uses: repo-sync/pull-request@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.MYWORKFLOW  }}
+        with:
+          GITHUB_TOKEN: ${{ secrets.MYWORKFLOW  }}
+          source_branch: "test"
+          destination_branch: "main"
+          pr_title: ${{ github.event.head_commit.message }}
+          pr_body: ${{ github.event.head_commit.message }}
+          pr_label: "Staging,TestsPassed"
+          pr_assignee: "damouu"
