@@ -1,4 +1,5 @@
 export class Book {
+
     private _uuid: string;
     private _totalPages: number;
     private _title: string;
@@ -6,8 +7,9 @@ export class Book {
     private _genre: string;
     private _created_at: string;
     private _author: string;
+    private _studentIdCard: string | null;
 
-    constructor(uuid: string, totalPages: number, title: string, publisher: string, genre: string, created_at: string, author: string) {
+    constructor(uuid: string, totalPages: number, title: string, publisher: string, genre: string, created_at: string, author: string, studentIdCard: string) {
         this._uuid = uuid;
         this._totalPages = totalPages;
         this._title = title;
@@ -15,6 +17,7 @@ export class Book {
         this._genre = genre;
         this._created_at = created_at;
         this._author = author;
+        this._studentIdCard = studentIdCard;
     }
 
     get uuid(): string {
@@ -72,4 +75,13 @@ export class Book {
     set author(value: string) {
         this._author = value;
     }
+
+    get studentIdCard(): string {
+        return <string>this._studentIdCard;
+    }
+
+    set studentIdCard(value: string) {
+        this._studentIdCard = value;
+    }
+
 }
