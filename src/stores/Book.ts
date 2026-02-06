@@ -1,127 +1,100 @@
-import {inject, reactive, ref} from "vue";
+import {inject, ref} from "vue";
 import {defineStore} from 'pinia';
 import {Book} from "@/types/Book";
-import {errors} from "msw";
+import type {RouteParamValue} from "vue-router";
+import type {AxiosInstance} from "axios";
 
 export const useBookStore = defineStore('book', () => {
+    // 1. Properly type the injected Axios instance
+    const axios = inject<AxiosInstance>('axios')!;
 
-        const axios = inject('axios');
-        const pageNumber: number = ref(0);
-        const sizeNumber: number = ref(20);
-        const book: Book = reactive<Book>({});
-        const bookList: Array<Book> = reactive<Book[]>([]);
-        const bookListTitle: Array<Book> = reactive<Book[]>([]);
+    // 2. Fix Ref types (Remove the :number before the =)
+    const pageNumber = ref(0);
+    const sizeNumber = ref(20);
 
-        /**
-         * fetches to the database through an HTTP request, a specific research by passing an integer named pageNumber and
-         * another one called sizeNumber resulting in a responses returning the desired page and the desired number of resources in the response.
-         *
-         * @author damouu <mouadsehbaoui@gmail.com>.
-         * @param {number} pageNumber - the desired page number.
-         * @param {sizeNumber} sizeNumber - the desired number of resources wanted in the response.
-         * @return {Array<Book>} - return an array of books corresponding to the passed  parameters.
-         */
-        async function getBooks(pageNumber: number, sizeNumber: number): Promise {
-            try {
-                await axios.get('/book' + '?page=' + pageNumber + '&size=' + sizeNumber).then(response => {
-                    response.data.forEach(book => {
-                        bookList.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
-                    });
-                });
-            } catch (e) {
-                console.log(e);
-            }
+    // 3. Use Ref for a single object that starts empty
+    const book = ref<Book | null>(null);
+
+    // 4. Use Ref for arrays to avoid "assignment to constant" error
+    const bookList = ref<Book[]>([]);
+    const bookListTitle = ref<Book[]>([]);
+
+    async function getBooks(page: number, size: number): Promise<void> {
+        try {
+            const response = await axios.get('/book', {
+                params: {page, size}
+            });
+            // Clear and repopulate
+            bookList.value = response.data.map((b: any) =>
+                new Book(b.uuid, b.totalPages, b.title, b.publisher, b.genre, b.created_at, b.author)
+            );
+        } catch (e) {
+            console.error(e);
         }
-
-        /**
-         * fetches the next page of Book from the database and stores the result into the Book's store.
-         *
-         * @author @Damou
-         * @exception {errors}  will throw an exception if the given uuid does not correspond to an existing book.
-         * @return {Promise} will return a promise containing the searched book if the UUID exist in the database
-         */
-        async function fetchMoreBooks(): Promise {
-            try {
-                await axios.get('/book' + '?page=' + (pageNumber.value += 1) + '&size=' + sizeNumber.value).then(response => {
-                    response.data.forEach(book => {
-                        bookList.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
-                    });
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-
-        /**
-         * fetches the next page of Book from the database and stores the result into the Book's store.
-         *
-         * @author @Damou
-         * @exception {errors}  will throw an exception if the given uuid does not correspond to an existing book.
-         * @return {Promise} will return a promise containing the searched book if the UUID exist in the database
-         */
-        async function fetchMoreBooksTitle(title) {
-            try {
-                await axios.get('/book' + '?page=' + (pageNumber.value += 1) + '&size=' + sizeNumber.value, {params: {title: title}}).then(response => {
-                    bookListTitle.length = 0;
-                    response.data.forEach(book => {
-                        bookListTitle.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
-                    });
-                });
-                return Promise.resolve(200);
-            } catch (e) {
-                return Promise.reject("error");
-            }
-        }
-
-        /**
-         * searches for a specific book by the given UUID passes as a parameter if the given UUID exist in the database.
-         *
-         * @author damouu <mouadsehbaoui@gmail.com>
-         * @param {string} uuid - a unique identifier ID associated to a unique Book resource in the Book table.
-         * @throws {NotFound} - resource not found with given UUID
-         * @return {Promise} Promise object with the found book if te given UUID exist in the database.
-         */
-        async function getBookUUID(uuid: string): Promise<Book> {
-            try {
-                await axios.get('/book/' + uuid).then(response => {
-                    book.uuid = response.data.book.UUID;
-                    book.author = response.data.book.author;
-                    book.title = response.data.book.title;
-                    book.genre = response.data.book.genre;
-                    book.created_at = response.data.book.created_at;
-                    book.totalPages = response.data.book.total_pages;
-                    book.publisher = response.data.book.publisher;
-                    if (response.data.studentCard.studentCardUUID) {
-                        book.studentIdCard = response.data.studentCard.studentCardUUID;
-                    }
-                });
-            } catch (e) {
-                return e;
-            }
-        }
-
-        /**
-         * クエリパラメータに入力された本のタイトルで本を検察するの関数です。
-         *
-         * @author damouu <mouadsehbaoui@gmail.com>
-         * @param {string} title - the title of a given book.
-         * @throws {NotFound} - resource not found with given UUID
-         * @return {Promise} Promise object with the found book if te given UUID exist in the database.
-         */
-        async function getBookTitle(title: string): Promise<Book> {
-            try {
-                await axios.get('/book/search?title=' + title).then(response => {
-                    bookListTitle.length = 0;
-                    response.data.forEach(book => {
-                        bookListTitle.push(new Book(book.uuid, book.totalPages, book.title, book.publisher, book.genre, book.created_at, book.author));
-                    });
-                });
-            } catch (e) {
-                return false;
-            }
-        }
-
-        return {bookList, fetchMoreBooks, getBooks, getBookUUID, book, getBookTitle, bookListTitle, fetchMoreBooksTitle};
     }
-);
+
+    async function fetchMoreBooks(): Promise<void> {
+        try {
+            pageNumber.value += 1; // Correct way to increment ref
+            const response = await axios.get('/book', {
+                params: {page: pageNumber.value, size: sizeNumber.value}
+            });
+
+            response.data.forEach((b: any) => {
+                bookList.value.push(new Book(b.uuid, b.totalPages, b.title, b.publisher, b.genre, b.created_at, b.author));
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function fetchMoreBooksTitle(title: string): Promise<number> {
+        try {
+            pageNumber.value += 1;
+            const response = await axios.get('/book', {
+                params: {page: pageNumber.value, size: sizeNumber.value, title}
+            });
+
+            response.data.forEach((b: any) => {
+                bookListTitle.value.push(new Book(b.uuid, b.totalPages, b.title, b.publisher, b.genre, b.created_at, b.author));
+            });
+            return 200;
+        } catch (e) {
+            throw new Error("error");
+        }
+    }
+
+    async function getBookUUID(uuid: string | RouteParamValue | RouteParamValue[]): Promise<void> {
+        try {
+            const response = await axios.get(`/book/${uuid}`);
+            const data = response.data.book;
+
+            // Re-assigning the ref value
+            book.value = new Book(
+                data.UUID,
+                data.total_pages,
+                data.title,
+                data.publisher,
+                data.genre,
+                data.created_at,
+                data.author
+            );
+
+            if (response.data.studentIdCard?.studentIdCardUUID) {
+                book.value.studentIdCard = response.data.studentIdCard.studentIdCardUUID;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    return {
+        bookList,
+        fetchMoreBooks,
+        getBooks,
+        getBookUUID,
+        book,
+        bookListTitle,
+        fetchMoreBooksTitle
+    };
+});
