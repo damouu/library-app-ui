@@ -64,6 +64,16 @@ const router = createRouter({
             path: '/:pathMatch(.*)*',
             name: 'not-found',
             component: () => import('@/views/error/NotFoundView.vue')
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('@/views/user/SignInView.vue')
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: () => import('@/views/user/UserView.vue')
         }
     ]
 });
