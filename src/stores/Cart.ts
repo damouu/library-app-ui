@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
 import {api} from "@/plugins/gateway";
-import { useUserStore } from "@/stores/User";
+import {useUserStore} from "@/stores/User";
 
 
 export interface CartItem {
@@ -21,6 +21,7 @@ export const useCartStore = defineStore('Cart', () => {
     const items = ref<CartItem[]>([]);
     const maxItems = 5;
     const userStore = useUserStore();
+    const lastTransaction = ref<any>(null);
     const isLoading = ref(false);
 
     function addToCart(newItem: CartItem) {
@@ -44,13 +45,13 @@ export const useCartStore = defineStore('Cart', () => {
         items.value = [];
     }
 
-    async function borrow(): Promise<void> {
+    async function borrow(): Promise<boolean> {
 
-        isLoading.value = true;
+        // isLoading.value = true;
 
         if (!userStore.token) {
             alert("ログインしてください (Please login to borrow)");
-            return;
+            return false;
         }
 
         const payload = {
@@ -77,14 +78,21 @@ export const useCartStore = defineStore('Cart', () => {
                 },
             });
 
+            lastTransaction.value = {
+                ...response.data.data,
+                borrowedItems: [...items.value]
+            };
+
             clearCart();
-            await userStore.getRecords(0, 5, "borrow_start_date", "desc");
-            
+            return true;
+            // await userStore.getRecords(0, 5, "borrow_start_date", "desc");
+
         } catch (error) {
+            return false;
         } finally {
             isLoading.value = false;
         }
     }
 
-    return {items, maxItems, addToCart, removeFromCart, clearCart, borrow};
+    return {items, maxItems, addToCart, removeFromCart, clearCart, borrow, isLoading, lastTransaction};
 });
