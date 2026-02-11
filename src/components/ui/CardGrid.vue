@@ -1,5 +1,11 @@
 <template>
   <div class="container-fluid">
+    <div class="text-center mb-5">
+      <h4 v-if="chapterStore.seriesList?.length > 0">
+        コミックス名 : {{ chapterStore.seriesList[0].title }}
+      </h4>
+      <h4 v-else class="text-muted">読み込み中...</h4>
+    </div>
     <div class="row g-4">
       <div
           v-for="chapter in chapterStore.seriesList"
@@ -16,9 +22,9 @@
             <img :src="chapter.coverArtworkUrl" class="card-img-top" alt="Cover">
             <div class="card-body">
               <h5 class="card-title text-primary">{{ chapter.title }} </h5>
-              <p class="card-text mb-1 small">サブタイトル: {{ chapter.secondTitle }}</p>
-              <p class="card-text mb-1 small">巻の番号: {{ chapter.chapterNumber }}</p>
-              <p class="card-text text-muted small">ページの数: {{ chapter.totalPages }}</p>
+              <p class="card-text mb-1 small"> {{ chapter.secondTitle }}</p>
+              <p class="card-text mb-1 small">巻{{ chapter.chapterNumber }}</p>
+              <p class="card-text text-muted small">ページ数{{ chapter.totalPages }}</p>
             </div>
           </div>
 
