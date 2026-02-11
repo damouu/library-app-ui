@@ -11,10 +11,10 @@
     </div>
 
     <div v-else>
-      <div v-for="record in userStore.borrowHistory.borrows" :key="record.uuid" class="card mb-4 border-0 shadow-sm">
+      <div v-for="record in userStore.borrowHistory.borrows" :key="record.uuid" class=" mb-4 border-0 shadow-sm">
 
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <div>
+        <div class="bg-light d-flex justify-content-between align-items-center">
+          <div class="rounded-circle">
             <span class="small text-muted d-block">注文番号: {{ record.uuid.split('-')[0] }}</span>
             <span class="badge rounded-pill bg-dark">
               {{ record.startDate }} 〜 {{ record.expectedEndDate }}
@@ -23,19 +23,19 @@
 
           <div v-if="record.actualReturnDate === null || record.actualReturnDate === 'null'">
             <button @click="openReturnModal(record.uuid)" class="btn btn-sm btn-warning fw-bold shadow-sm">
-              返却する (Return)
+              返却する
             </button>
           </div>
 
           <div v-else>
             <div class="text-end">
-              <span class="badge bg-success d-block mb-1">返却済み (Returned)</span>
+              <span class="badge bg-success d-block mb-1">返却済み </span>
               <small class="text-muted" style="font-size: 0.7rem;">返却日: {{ record.actualReturnDate }}</small>
             </div>
           </div>
         </div>
 
-        <div class="card-body">
+        <div class="">
           <div class="d-flex gap-3 overflow-auto py-2">
             <div v-for="chapter in record.chapters" :key="chapter.uuid" class="chapter-item">
               <img :src="chapter.coverArtworkUrl"
@@ -60,8 +60,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useUserStore } from '@/stores/User';
+import {ref} from "vue";
+import {useUserStore} from '@/stores/User';
 import ReturnModal from './ReturnModal.vue';
 
 const userStore = useUserStore();
@@ -77,24 +77,7 @@ const handleReturn = async (uuid: string) => {
   const success = await userStore.returnBorrow(uuid);
   if (success) {
     showModal.value = false;
-    // userStore.returnBorrow already triggers getRecords to refresh the list
   }
 };
-</script>
 
-<style scoped>
-.chapter-item {
-  flex: 0 0 auto;
-  transition: transform 0.2s;
-}
-.chapter-item:hover {
-  transform: translateY(-5px);
-}
-.overflow-auto::-webkit-scrollbar {
-  height: 6px;
-}
-.overflow-auto::-webkit-scrollbar-thumb {
-  background: #ffc107;
-  border-radius: 10px;
-}
-</style>
+</script>
