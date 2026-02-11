@@ -31,7 +31,7 @@
 
     <div class="p-1 mt-3 border-top">
       <router-link
-          :to="{ name: 'checkout-success' }"
+          :to="{ name: 'cart' }"
           class="text-decoration-none text-reset"
           @click="$emit('close')"
       >
