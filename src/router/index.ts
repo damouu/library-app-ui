@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import HomeView from '../views/home/HomeView.vue';
-import Checkout from '../views/checkout/Checkout.vue';
+import Cart from '../views/checkout/Cart.vue';
+import Checkout from "@/views/checkout/Checkout.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,10 +31,21 @@ const router = createRouter({
             path: '/news',
             redirect: '/book'
         },
-
         {
-            path: '/checkout-success',
-            name: 'checkout-success',
+            path: '/cart',
+            name: 'cart',
+            component: Cart,
+            beforeEnter: (to, from, next) => {
+                if (!from.name) {
+                    next({name: 'home'});
+                } else {
+                    next();
+                }
+            }
+        },
+        {
+            path: '/checkout',
+            name: 'checkout',
             component: Checkout,
             beforeEnter: (to, from, next) => {
                 if (!from.name) {
