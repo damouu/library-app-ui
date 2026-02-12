@@ -84,8 +84,8 @@ export const useCartStore = defineStore('Cart', () => {
             };
 
             clearCart();
+            userStore.getRecords(0, 5, "borrow_start_date", "desc");
             return true;
-            // await userStore.getRecords(0, 5, "borrow_start_date", "desc");
 
         } catch (error) {
             return false;
