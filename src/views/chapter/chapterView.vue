@@ -9,7 +9,6 @@
       </div>
     </div>
 
-
     <ChapterGrid
         :seriesUuid="props.seriesUuid"
         :page="0"
@@ -66,5 +65,16 @@ onMounted(async () => {
 
 });
 
+
+async function handleFilterApply(newFilters: any) {
+  await router.push({
+    query: {
+      ...newFilters,
+      page: 1
+    }
+  });
+
+  await fetchSeriesData(null);
+}
 
 </script>
