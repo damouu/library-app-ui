@@ -47,6 +47,7 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.chapterNumber,
                 item.coverArtworkUrl,
                 item.publicationDate,
+                null
             ));
 
             pagination.value = {
@@ -80,7 +81,8 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.totalPages,
                 item.chapterNumber,
                 item.coverArtworkUrl,
-                item.publicationDate
+                item.publicationDate,
+                null
             );
 
         } catch (error) {
@@ -112,7 +114,8 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.totalPages,
                 item.chapterNumber,
                 item.coverArtworkUrl,
-                item.publicationDate
+                item.publicationDate,
+                null
             ));
 
             pagination.value = {
@@ -159,6 +162,7 @@ export const useChapterStore = defineStore('Chapter', () => {
                 null,
                 item.chapterNumber,
                 item.chapterCoverUrl,
+                null,
                 null
             ));
 
