@@ -41,6 +41,16 @@ body {
     border-radius: 10px;
 }
 
+body {
+    font-family: 'Noto Sans JP', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+:root {
+    --bs-body-font-family: 'Noto Sans JP', sans-serif;
+}
 
 .my-cart-dropdown {
     position: absolute;
@@ -139,7 +149,9 @@ body {
     height: 6px;
 }
 
-.modal-backdrop { background-color: rgba(0,0,0,0.5); }
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
 .overflow-auto::-webkit-scrollbar-thumb {
     background: #ffc107;
