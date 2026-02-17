@@ -14,9 +14,9 @@
             <img :src="series.coverArtworkUrl" class="card-img-top" alt="Cover">
             <div class="card-body">
               <h5 class="card-title text-primary">{{ series.title }} </h5>
-              <p class="card-text mb-1 small">サブタイトル: {{ series.author }}</p>
-              <p class="card-text mb-1 small">巻の番号: {{ series.illustrator }}</p>
-              <p class="card-text text-muted small">ページの数: {{ series.genre }}</p>
+              <p class="card-text mb-1 small">{{ series.author }}</p>
+              <p class="card-text mb-1 small"> {{ series.illustrator }}</p>
+              <p class="card-text text-muted small">{{ series.genre }}</p>
             </div>
           </div>
         </router-link>
@@ -30,11 +30,5 @@ import {useSeriesStore} from "@/stores/Series";
 
 const seriesStore = useSeriesStore();
 
-const props = defineProps<{
-  sort: string,
-  direction: string,
-  page: number,
-  size: number,
-}>();
 
 </script>
