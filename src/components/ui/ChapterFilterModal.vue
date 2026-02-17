@@ -23,18 +23,18 @@
 
             <div class="mb-3">
               <label class="form-label fw-semibold">secondTitle</label>
-              <input v-model="filters.author" type="text" class="form-control" placeholder="著者名を入力">
+              <input v-model="filters.secondTitle" type="text" class="form-control" placeholder="著者名を入力">
             </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">chapterNumber</label>
-              <input v-model="filters.illustrator" type="number" class="form-control" placeholder="25">
+            <div class="mb-1">
+              <label class="form-label fw-semibold">巻数</label>
+              <input v-model="filters.chapterNumber" type="number" class="form-control" placeholder="25">
             </div>
 
           </form>
         </div>
 
-        <div class="modal-footer border-top-0 px-4 pb-4">
+        <div class="modal-footer border-top-0 px-4 pb-4 justify-content-center gap-5">
           <button type="button" class="btn btn-outline-secondary px-4" @click="resetFilters">リセット</button>
           <button type="button" class="btn btn-primary px-4" @click="applyFilters">検索する</button>
         </div>
@@ -49,7 +49,7 @@ import {ref} from 'vue';
 const emit = defineEmits(['close', 'confirm']);
 
 const filters = ref({
-  title: '', author: '', illustrator: '', genre: '', publisher: ''
+  title: '', secondTitle: '', chapterNumber: ''
 });
 
 const applyFilters = () => {
@@ -61,6 +61,6 @@ const applyFilters = () => {
 };
 
 const resetFilters = () => {
-  filters.value = {title: '', author: '', illustrator: '', genre: '', publisher: ''};
+  filters.value = {title: '', secondTitle: '', chapterNumber: ''};
 };
 </script>
