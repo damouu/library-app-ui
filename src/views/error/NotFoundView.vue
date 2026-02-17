@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts" setup>
-import TitleMessage from "@/components/TitleMessage.vue";
-import TableList from "@/components/TableList.vue";
-import PaginationTable from "@/components/PaginationTable.vue";
+import TitleMessage from "@/components/common/TitleMessage.vue";
+import TableList from "@/components/ui/TableList.vue";
+import PaginationTable from "@/components/ui/PaginationTable.vue";
 import {ref} from "vue";
 
 const pageNumber: Number = ref(0);
