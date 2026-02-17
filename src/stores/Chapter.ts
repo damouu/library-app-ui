@@ -7,6 +7,7 @@ export const useChapterStore = defineStore('Chapter', () => {
     const seriesList = ref<Chapter[]>([]);
     const currentChapter = ref<Chapter | null>(null);
     const newChapters = ref<Chapter[] | null>(null);
+    const Chapters = ref<Chapter[] | null>(null);
 
     type PeriodKey = 'week' | 'lastweek' | 'lastmonth';
 
@@ -92,6 +93,7 @@ export const useChapterStore = defineStore('Chapter', () => {
         }
     }
 
+
     async function getNews(page: number, size: number, recent: string, direction: string,): Promise<void> {
 
         isLoading.value = true;
@@ -129,6 +131,57 @@ export const useChapterStore = defineStore('Chapter', () => {
 
         } catch (error) {
             throw error;
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+
+    async function getChapter(page: number, size: number, sort: string, direction: string, filters = {}): Promise<boolean> {
+
+        isLoading.value = true;
+
+        const params = {
+            page,
+            size,
+            sort,
+            direction,
+            ...filters
+        };
+
+        const cleanParams = Object.fromEntries(
+            Object.entries(params).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+        );
+
+        try {
+            const response = await api.get(`/api/catalogue/public/chapters`, {
+                params: cleanParams
+            });
+
+
+            Chapters.value = response.data.content.map((item: any) => new Chapter(
+                item.uuid,
+                item.title,
+                item.secondTitle,
+                item.totalPages,
+                item.chapterNumber,
+                item.coverArtworkUrl,
+                item.publicationDate,
+                null
+            ));
+
+            pagination.value = {
+                totalPages: response.data.totalPages,
+                totalElements: response.data.totalElements,
+                currentPage: response.data.number,
+                isLast: response.data.last,
+                isFirst: response.data.first,
+                pageSize: response.data.size
+            };
+            return true;
+        } catch (error) {
+            throw error;
+            return false;
         } finally {
             isLoading.value = false;
         }
@@ -175,7 +228,6 @@ export const useChapterStore = defineStore('Chapter', () => {
         }
     }
 
-
     return {
         seriesList,
         isLoading,
@@ -186,6 +238,8 @@ export const useChapterStore = defineStore('Chapter', () => {
         getTop,
         rankings,
         newChapters,
+        getChapter,
+        Chapters,
         getNews
     };
 });
