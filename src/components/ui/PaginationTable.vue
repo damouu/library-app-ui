@@ -1,4 +1,4 @@
-<template>
+ <template>
   <nav aria-label="Page navigation example">
     <ul ref="peep" class="pagination justify-content-center pagination-lg">
       <a class="page-link" :class="{ disabled: isDisabled}" href="#"
