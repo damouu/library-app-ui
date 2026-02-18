@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import {useStudentStore} from "@/stores/Student";
+import useStudentStore from "@/stores/User";
 import {watch} from "vue";
 
 const store = useStudentStore();
