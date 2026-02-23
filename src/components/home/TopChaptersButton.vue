@@ -4,7 +4,7 @@
 
     <div class="col-6 text-center">
       <h2 class="m-0">
-        <i class="bi bi-trophy-fill"> ランキング</i>
+        <i class="bi bi-trophy-fill"> 順位</i>
       </h2>
     </div>
 
