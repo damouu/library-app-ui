@@ -1,11 +1,11 @@
 export class Comment {
 
     private _chapterUuid: string;
-    private _commentUuid: number;
+    private _commentUuid: number | null = null;
     private _content: string;
     private _deletedAt: string | null = null;
     private _createdAt: string;
-    private _updatedAt: string;
+    private _updatedAt: string | null = null;
     private _userName: string;
     private _avatar_URL: string;
 
