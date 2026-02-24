@@ -7,9 +7,10 @@ export class Chapter {
     private _coverArtworkUrl: string;
     private _totalPages: number | null;
     private _chapterNumber: number | null;
+    private _seriesUuid: string | null;
     private _bookUuid: string | null;
 
-    constructor(uuid: string, title: string, secondTitle: string, totalPages: number | null, chapterNumber: number, coverArtworkUrl: string, publicationDate: string | null, bookUuid: string | null) {
+    constructor(uuid: string, title: string, secondTitle: string, totalPages: number | null, chapterNumber: number, coverArtworkUrl: string, publicationDate: string | null, seriesUuid: string | null, bookUuid: string | null) {
         this._uuid = uuid;
         this._title = title;
         this._secondTitle = secondTitle;
@@ -17,7 +18,16 @@ export class Chapter {
         this._chapterNumber = chapterNumber;
         this._coverArtworkUrl = coverArtworkUrl;
         this._publicationDate = publicationDate;
+        this._seriesUuid = seriesUuid;
         this._bookUuid = bookUuid;
+    }
+
+    get seriesUuid(): string | null {
+        return this._seriesUuid;
+    }
+
+    set seriesUuid(value: string | null) {
+        this._seriesUuid = value;
     }
 
     get bookUuid(): string | null {
