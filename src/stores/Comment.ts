@@ -96,5 +96,55 @@ export const useCommentStore = defineStore('Comment', () => {
         }
     }
 
-    return {commentsList, isLoading, getChapter, pagination, postComment};
+    async function updateComment(uuid: string, content: string): Promise<boolean> {
+        isLoading.value = true;
+
+        try {
+            const response = await api.put(
+                `/api/comment/${uuid}`,
+                {
+                    comment: content
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${userStore.token}`
+                    }
+                }
+            );
+
+        } catch (error) {
+            console.error("Comment post failed:", error);
+            throw error;
+        } finally {
+            isLoading.value = false;
+            return true
+        }
+    }
+
+
+    async function deleteComment(commentUuid: string): Promise<void> {
+        isLoading.value = true;
+
+        try {
+            const response = await api.delete(
+                `/api/comment/${commentUuid}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${userStore.token}`
+                    }
+                }
+            );
+
+            const index = commentsList.value.findIndex(c => c.commentUuid === commentUuid);
+            commentsList.value.splice(index, 1);
+
+        } catch (error) {
+            console.error("Comment delete failed:", error);
+            throw error;
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    return {commentsList, isLoading, getChapter, pagination, postComment, deleteComment, updateComment};
 });
