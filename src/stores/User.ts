@@ -117,6 +117,7 @@ export const useUserStore = defineStore('user', () => {
                         c.chapter_number,
                         c.chapter_cover_url,
                         null,
+                        null,
                         c.book_uuid
                     ))
                 };
