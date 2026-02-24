@@ -29,36 +29,58 @@
 
               <div class="d-flex align-items-end justify-content-between">
 
-                <p class="card-text mb-0 text-dark flex-grow-1" style="white-space: pre-line;">
-                  {{ comment.content }}
-                </p>
+                <div class="flex-grow-1">
+                  <p v-if="editingUuid !== comment.commentUuid"
+                     class="card-text mb-0 text-dark"
+                     style="white-space: pre-line;">
+                    {{ comment.content }}
+                  </p>
 
-                <div
-                    v-if="userStore.currentUser?.name === comment.userName"
-                    class="ms-auto ps-3 d-flex gap-2">
-                  <button type="button" class="btn btn-sm btn-outline-info">編集</button>
-                  <button type="button" class="btn btn-sm btn-outline-danger">削除</button>
+                  <div v-else class="pe-3">
+                    <textarea
+                        v-model="editBuffer"
+                        class="form-control form-control-sm"
+                        rows="2">
+                    </textarea>
+                  </div>
                 </div>
 
+                <div v-if="userStore.currentUser?.name === comment.userName" class="ms-auto ps-3 d-flex gap-2">
+
+                  <template v-if="editingUuid !== comment.commentUuid">
+                    <button type="button" class="btn btn-sm btn-outline-info" @click="startEdit(comment)">編集</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                            @click="deleteComment(comment.commentUuid)">削除
+                    </button>
+                  </template>
+
+                  <template v-else>
+                    <button type="button" class="btn btn-sm btn-success" @click="handleUpdate(comment.commentUuid)">
+                      保存
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary" @click="cancelEdit">キャンセル</button>
+                  </template>
+
+                </div>
               </div>
             </div>
-
-
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {useCommentStore} from "@/stores/Comment";
 import {useUserStore} from "@/stores/User";
 
 const commentStore = useCommentStore();
 const userStore = useUserStore();
+
+const editingUuid = ref<string | null>(null);
+const editBuffer = ref<string>("");
 
 const props = defineProps<{
   chapterUuid: string,
@@ -74,6 +96,32 @@ const formatDate = (dateString: string) => {
     year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
   });
 };
+
+
+function startEdit(comment: any) {
+  editingUuid.value = comment.commentUuid;
+  editBuffer.value = comment.content;
+}
+
+function cancelEdit() {
+  editingUuid.value = null;
+  editBuffer.value = "";
+}
+
+async function handleUpdate(uuid: string) {
+  const success = await commentStore.updateComment(uuid, editBuffer.value);
+  if (success) {
+    const index = commentStore.commentsList.findIndex(c => c.commentUuid === uuid);
+    if (index !== -1) {
+      commentStore.commentsList[index].content = editBuffer.value;
+    }
+    editingUuid.value = null;
+  }
+}
+
+async function deleteComment(commentUuid: string) {
+  await commentStore.deleteComment(commentUuid);
+}
 
 
 onMounted(async () => {
