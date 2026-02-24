@@ -1,7 +1,7 @@
 export class Comment {
 
     private _chapterUuid: string;
-    private _commentUuid: number | null = null;
+    private _commentUuid: string | null = null;
     private _content: string;
     private _deletedAt: string | null = null;
     private _createdAt: string;
@@ -10,7 +10,7 @@ export class Comment {
     private _avatar_URL: string;
 
 
-    constructor(chapterUuid: string, commentUuid: number, content: string, deletedAt: string | null, createdAt: string, updatedAt: string, userName: string, avatar_URL: string) {
+    constructor(chapterUuid: string, commentUuid: string, content: string, deletedAt: string | null, createdAt: string, updatedAt: string, userName: string, avatar_URL: string) {
         this._chapterUuid = chapterUuid;
         this._commentUuid = commentUuid;
         this._content = content;
@@ -30,11 +30,12 @@ export class Comment {
         this._chapterUuid = value;
     }
 
-    get commentUuid(): number {
+
+    get commentUuid(): string | null {
         return this._commentUuid;
     }
 
-    set commentUuid(value: number) {
+    set commentUuid(value: string) {
         this._commentUuid = value;
     }
 
