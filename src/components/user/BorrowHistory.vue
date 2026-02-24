@@ -38,12 +38,19 @@
         <div class="">
           <div class="d-flex gap-3 overflow-auto py-2">
             <div v-for="chapter in record.chapters" :key="chapter.uuid" class="chapter-item">
-              <img :src="chapter.coverArtworkUrl"
-                   :alt="chapter.title"
-                   class="rounded shadow-sm mb-2"
-                   style="width: 100px; height: 140px; object-fit: cover;">
-              <h6 class="mb-0 text-truncate" style="max-width: 100px;">{{ chapter.title }}</h6>
-              <small class="text-muted">第 {{ chapter.chapterNumber }} 巻</small>
+
+              <router-link
+                  :to="{ name: 'chapter-details', params: { chapterUuid: chapter.uuid }}"
+                  class="text-decoration-none text-reset"
+              >
+
+                <img :src="chapter.coverArtworkUrl"
+                     :alt="chapter.title"
+                     class="rounded shadow-sm mb-2"
+                     style="width: 100px; height: 140px; object-fit: cover;">
+                <h6 class="mb-0 text-truncate" style="max-width: 100px;">{{ chapter.title }}</h6>
+                <small class="text-muted">第 {{ chapter.chapterNumber }} 巻</small>
+              </router-link>
             </div>
           </div>
         </div>
