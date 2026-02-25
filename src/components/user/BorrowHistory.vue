@@ -14,11 +14,24 @@
       <div v-for="record in userStore.borrowHistory.borrows" :key="record.uuid" class=" mb-4 border-0 shadow-sm">
 
         <div class="bg-light d-flex justify-content-between align-items-center">
+
           <div class="rounded-circle">
-            <span class="small text-muted d-block">注文番号: {{ record.uuid.split('-')[0] }}</span>
+            <span class="small text-muted d-block ">注文番号: {{ record.uuid.split('-')[0] }}</span>
             <span class="badge rounded-pill bg-dark">
               {{ record.startDate }} 〜 {{ record.expectedEndDate }}
             </span>
+          </div>
+
+          <div v-if="record.actualReturnDate !== 'null' && record.actualReturnDate && record.returnLately">
+            <span class="badge rounded-pill bg-danger fs-6 p-2">期限超過 (返却済)</span>
+          </div>
+
+          <div v-else-if="(record.actualReturnDate === 'null' || !record.actualReturnDate) && record.returnLately">
+            <span class="badge rounded-pill bg-warning text-dark fs-6 p-2">未返却</span>
+          </div>
+
+          <div v-else-if="record.actualReturnDate !== 'null' && record.actualReturnDate && !record.returnLately">
+            <span class="badge rounded-pill bg-success fs-6 p-2">期日内返却</span>
           </div>
 
           <div v-if="record.actualReturnDate === null || record.actualReturnDate === 'null'">
@@ -30,9 +43,10 @@
           <div v-else>
             <div class="text-end">
               <span class="badge bg-success d-block mb-1">返却済み </span>
-              <small class="text-muted" style="font-size: 0.7rem;">返却日: {{ record.actualReturnDate }}</small>
+              <small class="text-muted m-lg-3" style="font-size: 1rem;">返却日: {{ record.actualReturnDate }}</small>
             </div>
           </div>
+
         </div>
 
         <div class="">
@@ -50,6 +64,7 @@
                      style="width: 100px; height: 140px; object-fit: cover;">
                 <h6 class="mb-0 text-truncate" style="max-width: 100px;">{{ chapter.title }}</h6>
                 <small class="text-muted">第 {{ chapter.chapterNumber }} 巻</small>
+
               </router-link>
             </div>
           </div>
@@ -63,6 +78,13 @@
         @close="showModal = false"
         @confirm="handleReturn"
     />
+
+    <ReturnModalOnTime
+        v-if="showModalOnTime"
+        :response="response"
+        @close="showModalOnTime = false"
+    />
+
   </div>
 </template>
 
@@ -70,10 +92,13 @@
 import {ref} from "vue";
 import {useUserStore} from '@/stores/User';
 import ReturnModal from './ReturnModal.vue';
+import ReturnModalOnTime from './ReturnModalOnTime.vue';
 
 const userStore = useUserStore();
 const showModal = ref(false);
+const showModalOnTime = ref(false);
 const selectedUuid = ref('');
+const response = ref(null);
 
 const openReturnModal = (uuid: string) => {
   selectedUuid.value = uuid;
@@ -81,10 +106,9 @@ const openReturnModal = (uuid: string) => {
 };
 
 const handleReturn = async (uuid: string) => {
-  const success = await userStore.returnBorrow(uuid);
-  if (success) {
-    showModal.value = false;
-  }
+  response.value = await userStore.returnBorrow(uuid);
+  showModalOnTime.value = true;
+  showModal.value = false;
 };
 
 </script>
