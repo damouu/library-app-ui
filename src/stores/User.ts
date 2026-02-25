@@ -109,6 +109,9 @@ export const useUserStore = defineStore('user', () => {
                     startDate: record.borrow_start_date,
                     expectedEndDate: record.borrow_expected_end_date,
                     actualReturnDate: record.borrow_return_date,
+                    returnLately: record.return_lately,
+                    daysLate: record.days_late,
+                    lateFee: record.late_fee,
                     chapters: record.chapters.map((c: any) => new Chapter(
                         c.chapter_uuid,
                         c.chapter_title,
@@ -123,10 +126,7 @@ export const useUserStore = defineStore('user', () => {
                 };
             });
 
-            borrowHistory.value = {
-                ...rawData,
-                borrows: transformedBorrows
-            };
+            borrowHistory.value = {...rawData, borrows: transformedBorrows};
 
         } catch (error) {
         } finally {
@@ -134,7 +134,7 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    async function returnBorrow(borrowUuid: string): Promise<boolean> {
+    async function returnBorrow(borrowUuid: string): Promise<any> {
 
         isLoading.value = true;
 
@@ -159,13 +159,13 @@ export const useUserStore = defineStore('user', () => {
         };
 
         try {
-            await api.post(`/api/borrow/${borrowUuid}/return`, payload, {
+            const response = await api.post(`/api/borrow/${borrowUuid}/return`, payload, {
                 headers: {'Authorization': `Bearer ${token.value}`}
             });
 
             await getRecords(0, 5, "borrow_start_date", "desc");
 
-            return true;
+            return response.data.data
 
         } catch (error) {
             return false;
