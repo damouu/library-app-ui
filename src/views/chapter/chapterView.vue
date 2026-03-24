@@ -1,32 +1,36 @@
-=
 <template>
   <div class="container py-5">
-    <div v-if="chapterStore.isLoading">
-      <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
+    <div class="content-wrapper">
+      <Transition name="fade-slide" mode="out-in">
+        <div v-if="chapterStore.isLoading" key="loading" class="loader-container">
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
         </div>
-      </div>
+
+        <div v-else key="content">
+          <ChapterGrid
+              :key="chapterStore.pagination?.currentPage"
+              :seriesUuid="props.seriesUuid"
+              :page="Number(route.query.page || 1) - 1"
+              :size="12"
+              sort="publicationDate"
+              direction="desc"
+          />
+        </div>
+      </Transition>
     </div>
 
-    <ChapterGrid
-        :seriesUuid="props.seriesUuid"
-        :page="0"
-        :size="12"
-        sort="publicationDate"
-        direction="desc"
-    />
-  </div>
-
-  <div>
-    <Pagination
-        v-if="chapterStore.pagination"
-        :total-pages="chapterStore.pagination.totalPages"
-        :current-page="chapterStore.pagination.currentPage"
-        :is-first="chapterStore.pagination.isFirst"
-        :is-last="chapterStore.pagination.isLast"
-        @change-page="handlePageChange"
-    />
+    <div class="pagination-wrapper mt-5 pt-4 border-top">
+      <Pagination
+          v-if="chapterStore.pagination"
+          :total-pages="chapterStore.pagination.totalPages"
+          :current-page="chapterStore.pagination.currentPage"
+          :is-first="chapterStore.pagination.isFirst"
+          :is-last="chapterStore.pagination.isLast"
+          @change-page="handlePageChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -35,7 +39,7 @@
 import ChapterGrid from "../../components/ui/CardGrid.vue"
 import Pagination from "../../components/common/Pagination.vue"
 import {useChapterStore} from "@/stores/Chapter";
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import {useRoute, useRouter} from 'vue-router';
 
 const router = useRouter();
@@ -47,34 +51,28 @@ const props = defineProps<{
   seriesUuid: string
 }>();
 
-async function handlePageChange(newPage: number) {
+const fetchData = async () => {
+  const page = route.query.page ? Number(route.query.page) - 1 : 0;
+  await chapterStore.getSeriesChapters(page, 12, "publicationDate", "desc", props.seriesUuid);
+};
 
-  await router.push({query: {...route.query, page: newPage + 1}});
-
-  await chapterStore.getSeriesChapters(newPage, 12, 'publicationDate', 'asc', props.seriesUuid);
-}
-
-onMounted(async () => {
-  const pageFromUrl = route.query.page ? Number(route.query.page) : 1;
-
-  if (!route.query.page) {
-    await router.replace({query: {...route.query, page: 1}});
-  }
-
-  await chapterStore.getSeriesChapters(pageFromUrl - 1, 12, "publicationDate", "desc", props.seriesUuid);
-
-});
-
-
-async function handleFilterApply(newFilters: any) {
-  await router.push({
-    query: {
-      ...newFilters,
-      page: 1
+watch(
+    () => route.query.page,
+    () => {
+      fetchData();
     }
-  });
+);
 
-  await fetchSeriesData(null);
+async function handlePageChange(newPage: number) {
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  await router.push({query: {...route.query, page: newPage + 1}});
 }
+
+onMounted(() => {
+  if (!route.query.page) {
+    router.replace({query: {...route.query, page: 1}});
+  }
+  fetchData();
+});
 
 </script>
