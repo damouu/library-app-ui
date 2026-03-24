@@ -1,7 +1,13 @@
 <template>
-  <Header/>
-  <RouterView/>
-  <Footer/>
+  <div class="app-layout">
+    <Header/>
+
+    <main class="content">
+      <RouterView/>
+    </main>
+
+    <Footer/>
+  </div>
 </template>
 
 <script setup lang="ts">
