@@ -1,52 +1,39 @@
 <template>
   <div class="row">
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning position-fixed fixed-top border border-primary p-2">
+    <nav
+        class="navbar navbar-expand-lg navbar-light bg-warning position-fixed fixed-top border border-primary p-2 d-flex justify-content-between align-items-center">
 
-      <BorrowButton/>
+      <div class="d-flex flex-1 justify-content-start" style="flex: 1;">
+        <BorrowButton/>
+      </div>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mx-auto d-flex flex-row justify-content-center gap-5 mt-2">
-
+      <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+        <ul class="navbar-nav d-flex flex-row justify-content-center gap-5 mt-2">
           <li class="nav-item d-flex flex-column align-items-center">
             <i class="bi bi-book-fill fs-4"></i>
-            <RouterLink aria-current="page" class="nav-link active p-0" to="/series">
-              シリーズ
-            </RouterLink>
+            <RouterLink class="nav-link active p-0" to="/series">シリーズ</RouterLink>
           </li>
-
           <li class="nav-item d-flex flex-column align-items-center">
             <i class="bi bi-journal-bookmark-fill fs-4"></i>
-            <RouterLink aria-current="page" class="nav-link active p-0" to="/chapter">
-              コミックス
-            </RouterLink>
+            <RouterLink class="nav-link active p-0" to="/chapter">コミックス</RouterLink>
           </li>
-
         </ul>
       </div>
 
-
-      <div class="d-flex align-items-center gap-3 me-3">
+      <div class="d-flex align-items-center gap-3 justify-content-end" style="flex: 1;">
         <FormSearch/>
-
         <div v-if="!authStore.isAuthenticated">
           <AuthActions/>
         </div>
-
-        <div v-else class="d-flex align-items-center">
-          <button class="btn rounded ms-2">
-
-            <RouterLink aria-current="page" class="nav-link active p-0" to="/profile">
-            <img
-                :src="authStore.currentUser?.avatar_img_url"
-                alt="Profile Picture"
-                referrerpolicy="no-referrer"
-                class="rounded-circle border border-2 border-white shadow-sm"
-                style="width: 40px; height: 40px; object-fit: cover;"
-            >
-            </RouterLink>
-          </button>
+        <div v-else class="d-flex align-items-center me-3">
+          <RouterLink to="/profile">
+            <img :src="authStore.currentUser?.avatar_img_url"
+                 class="rounded-circle border border-2 border-white shadow-sm"
+                 style="width: 40px; height: 40px; object-fit: cover;">
+          </RouterLink>
         </div>
       </div>
+
     </nav>
   </div>
 </template>
