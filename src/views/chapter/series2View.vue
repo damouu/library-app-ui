@@ -1,38 +1,62 @@
 <template>
-  <div class="container py-5">
+  <div class="container py-5 min-vh-75">
 
-    <div class="row align-items-center position-relative mb-4">
-      <div class="col-12 text-center">
-        <h1>Chapter View</h1>
+    <div class="row align-items-center mb-5 pb-3 border-bottom">
+      <div class="col-12">
+        <div class="d-flex align-items-center justify-content-between">
+
+          <div class="ps-3 border-start border-primary border-4">
+            <h1 class="fw-bold text-dark mb-0 h2">
+              全巻一覧
+            </h1>
+            <p class="text-muted small mb-0 mt-1 d-none d-sm-block">
+              <i class="bi bi-book-half me-1"></i>
+              すべての巻・エピソードを閲覧できます
+            </p>
+          </div>
+
+          <div class="pe-2">
+            <div class="filter-wrapper">
+              <FilterButton @confirm="handleFilterApply"/>
+            </div>
+          </div>
+
+        </div>
       </div>
-
-      <div class="position-absolute end-0 w-auto">
-        <FilterButton @confirm="handleFilterApply"/>
-      </div>
-
     </div>
 
-    <div class="mt-3">
-      <div v-if="chapterStore.isLoading" class="spinner-border text-primary"/>
+    <div class="content-wrapper position-relative ">
+      <Transition name="fade-classic" mode="out-in">
 
-      <ChapterGrid
-          :page="0"
-          :size="12"
-          sort="publicationDate"
-          direction="desc"
-      />
+        <div v-if="chapterStore.isLoading" key="loading" class="loader-box">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
 
+        <div v-else key="grid-content">
+          <ChapterGrid
+              :key="chapterStore.pagination?.currentPage"
+              :page="0"
+              :size="12"
+              sort="publicationDate"
+              direction="desc"
+          />
+        </div>
+      </Transition>
     </div>
 
-    <div class="d-flex justify-content-center mt-5">
-      <Pagination
-          v-if="chapterStore.pagination"
-          :total-pages="chapterStore.pagination.totalPages"
-          :current-page="chapterStore.pagination.currentPage"
-          :is-first="chapterStore.pagination.isFirst"
-          :is-last="chapterStore.pagination.isLast"
-          @change-page="handlePageChange"
-      />
+    <div class="pagination-container mt-5 pt-4 border-top">
+      <div class="d-flex justify-content-center">
+        <Pagination
+            v-if="chapterStore.pagination"
+            :total-pages="chapterStore.pagination.totalPages"
+            :current-page="chapterStore.pagination.currentPage"
+            :is-first="chapterStore.pagination.isFirst"
+            :is-last="chapterStore.pagination.isLast"
+            @change-page="handlePageChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -103,7 +127,7 @@ async function handleFilterApply(newFilters: any) {
 
   const sortField = (route.query.sort as string) || 'publicationDate';
   const sortDir = (route.query.direction as string) || 'asc';
-  const page =  1;
+  const page = 1;
   const size = (newFilters.chapterNumber && newFilters.chapterNumber !== '') ? 1 : 12;
 
   await router.push({
@@ -120,6 +144,7 @@ async function handleFilterApply(newFilters: any) {
 
 
 async function handlePageChange(newPage: number) {
+  window.scrollTo({top: 0, behavior: 'smooth'});
   await router.push({
     query: {
       ...route.query,
