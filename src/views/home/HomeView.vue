@@ -3,19 +3,17 @@
     <top-chapters-button @period="handlePeriodChange"/>
     <TopChapters :displayedBooks="displayedBooks"/>
 
-    <NewChaptersGric/>
+    <NewChaptersGric ref="newReleaseGrid" />
 
     <div class="mt-5">
-
       <Pagination
           v-if="chapterStore.pagination"
           :total-pages="chapterStore.pagination.totalPages"
           :current-page="chapterStore.pagination.currentPage"
           :is-first="chapterStore.pagination.isFirst"
           :is-last="chapterStore.pagination.isLast"
-          @change-page="(newPage) => chapterStore.getNews(newPage, 12, 'publicationDate', 'desc')"
+          @change-page="handlePageChange"
       />
-
     </div>
   </main>
 </template>
@@ -30,6 +28,8 @@ import NewChaptersGric from "@/components/home/NewChaptersGric.vue";
 
 const chapterStore = useChapterStore();
 
+const newReleaseGrid = ref<any>(null);
+
 const period = ref<string>('week');
 
 type PeriodKey = 'week' | 'lastweek' | 'lastmonth';
@@ -37,6 +37,11 @@ type PeriodKey = 'week' | 'lastweek' | 'lastmonth';
 async function handlePeriodChange(newPeriod: PeriodKey) {
   period.value = newPeriod;
   await chapterStore.getTop(newPeriod, 0, 6);
+}
+
+async function handlePageChange(newPage: number) {
+  newReleaseGrid.value?.scrollToTop();
+  await chapterStore.getNews(newPage, 12, 'publicationDate', 'desc');
 }
 
 const displayedBooks = computed(() => {
