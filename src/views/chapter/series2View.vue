@@ -15,6 +15,39 @@
             </p>
           </div>
 
+
+          <div class="filter-chips-wrapper flex-grow-1 d-flex justify-content-center px-4">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+
+              <TransitionGroup name="fade-classic">
+                <button
+                    v-for="filter in activeFilters"
+                    :key="filter.key"
+                    @click="removeFilter(filter.key)"
+                    class="btn-primary-subtle d-flex align-items-center"
+                >
+                  <span class="me-2 fw-bold text-uppercase opacity-75" style="font-size: 0.65rem;">{{
+                      filter.key
+                    }}:</span>
+                  <span>{{ filter.label }}</span>
+                  <i class="bi bi-x ms-2"></i>
+                </button>
+              </TransitionGroup>
+
+              <div v-if="activeFilters.length > 1" class="d-flex align-items-center gap-2">
+                <div class="vr mx-2 opacity-25" style="height: 1.5rem;"></div>
+                <button
+                    @click="clearAllFilters"
+                    class="btn-clear-filters"
+                >
+                  <i class="bi bi-x-circle"></i>
+                  <span>条件をすべてクリア</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
           <div class="pe-2">
             <div class="filter-wrapper">
               <FilterButton @confirm="handleFilterApply"/>
@@ -63,7 +96,7 @@
 
 <script setup lang="ts">
 import {useChapterStore} from "@/stores/Chapter";
-import {onMounted} from "vue";
+import {computed, onMounted, watch} from "vue";
 import ChapterGrid from "../../components/ui/ChapterGrid.vue"
 import {useRoute, useRouter} from 'vue-router';
 import FilterButton from "@/components/ui/FilterChapterButton.vue";
@@ -154,5 +187,43 @@ async function handlePageChange(newPage: number) {
 
   await fetchChaptersData(12);
 }
+
+const activeFilters = computed(() => {
+  const query = route.query;
+  const skipKeys = ['page', 'sort', 'direction', 'size'];
+
+  return Object.entries(query)
+      .filter(([key, value]) => !skipKeys.includes(key) && value && value !== '')
+      .map(([key, value]) => ({
+        key,
+        label: value as string
+      }));
+});
+
+async function removeFilter(filterKey: string) {
+  const newQuery = {...route.query};
+  delete newQuery[filterKey];
+  newQuery.page = '1';
+  await router.push({query: newQuery});
+}
+
+async function clearAllFilters() {
+  await router.push({
+    query: {
+      page: '1',
+      sort: 'publicationDate',
+      direction: 'desc'
+    }
+  });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+watch(
+    () => route.query,
+    async () => {
+      await fetchChaptersData(12);
+    },
+    {deep: true}
+);
 
 </script>
