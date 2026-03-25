@@ -1,3 +1,5 @@
+import {Series} from "@/types/Series";
+
 export class Chapter {
 
     private _uuid: string;
@@ -5,30 +7,41 @@ export class Chapter {
     private _secondTitle: string;
     private _publicationDate: string | null;
     private _coverArtworkUrl: string;
+    private _summary: string | null;
     private _totalPages: number | null;
     private _chapterNumber: number | null;
-    private _seriesUuid: string | null;
     private _bookUuid: string | null;
+    private _series: Series | null;
 
-    constructor(uuid: string, title: string, secondTitle: string, totalPages: number | null, chapterNumber: number, coverArtworkUrl: string, publicationDate: string | null, seriesUuid: string | null, bookUuid: string | null) {
+    constructor(uuid: string, title: string, secondTitle: string, totalPages: number | null, chapterNumber: number, coverArtworkUrl: string, summary: string | null, publicationDate: string | null, bookUuid: string | null, series: Series | null) {
         this._uuid = uuid;
         this._title = title;
         this._secondTitle = secondTitle;
         this._totalPages = totalPages;
         this._chapterNumber = chapterNumber;
         this._coverArtworkUrl = coverArtworkUrl;
+        this._summary = summary;
         this._publicationDate = publicationDate;
-        this._seriesUuid = seriesUuid;
         this._bookUuid = bookUuid;
+        this._series = series;
     }
 
-    get seriesUuid(): string | null {
-        return this._seriesUuid;
+    get summary(): string | null {
+        return this._summary;
     }
 
-    set seriesUuid(value: string | null) {
-        this._seriesUuid = value;
+    set summary(value: string | null) {
+        this._summary = value;
     }
+
+    get series(): Series | null {
+        return this._series;
+    }
+
+    set series(value: Series | null) {
+        this._series = value;
+    }
+
 
     get bookUuid(): string | null {
         return this._bookUuid;
