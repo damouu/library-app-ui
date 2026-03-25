@@ -1,5 +1,5 @@
 <template>
-  <div class="align-items-center justify-content-center offset-4">
+  <div class="w-100 d-flex justify-content-center align-items-center sign-in-form" >
     <SignInForm />
   </div>
 </template>
