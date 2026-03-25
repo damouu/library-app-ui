@@ -6,12 +6,12 @@ export class Series {
     private _coverArtworkUrl: string;
     private _illustrator: string;
     private _publisher: string;
-    private _lastPrintPublicationDate: string;
+    private _lastPrintPublicationDate: string | null;
     private _firstPrintPublicationDate: string;
     private _author: string;
 
 
-    constructor(uuid: string, title: string, genre: string, coverArtworkUrl: string, illustrator: string, publisher: string, lastPrintPublicationDate: string, firstPrintPublicationDate: string, author: string) {
+    constructor(uuid: string, title: string, genre: string, coverArtworkUrl: string, illustrator: string, publisher: string, lastPrintPublicationDate: string | null, firstPrintPublicationDate: string, author: string) {
         this._uuid = uuid;
         this._title = title;
         this._genre = genre;
@@ -80,11 +80,11 @@ export class Series {
         this._publisher = value;
     }
 
-    get lastPrintPublicationDate(): string {
+    get lastPrintPublicationDate(): string | null {
         return this._lastPrintPublicationDate;
     }
 
-    set lastPrintPublicationDate(value: string) {
+    set lastPrintPublicationDate(value: string | null) {
         this._lastPrintPublicationDate = value;
     }
 
