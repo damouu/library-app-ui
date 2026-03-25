@@ -5,7 +5,7 @@
       <div class="col-12">
         <div class="d-flex align-items-center justify-content-between">
 
-          <div class="ps-3 border-start border-primary border-5">
+          <div class="ps-3 border-start border-primary border-5" style="min-width: 250px;">
             <h1 class="fw-black text-dark mb-0 h2">
               作品シリーズ<span class="text-primary">一覧</span>
             </h1>
@@ -14,7 +14,39 @@
             </div>
           </div>
 
-          <div class="pe-2">
+          <div class="filter-chips-wrapper flex-grow-1 d-flex justify-content-center px-4">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+
+              <TransitionGroup name="fade-classic">
+                <button
+                    v-for="filter in activeFilters"
+                    :key="filter.key"
+                    @click="removeFilter(filter.key)"
+                    class="btn-primary-subtle d-flex align-items-center"
+                >
+                  <span class="me-2 fw-bold text-uppercase opacity-75" style="font-size: 0.65rem;">{{
+                      filter.key
+                    }}:</span>
+                  <span>{{ filter.label }}</span>
+                  <i class="bi bi-x ms-2"></i>
+                </button>
+              </TransitionGroup>
+
+              <div v-if="activeFilters.length > 1" class="d-flex align-items-center gap-2">
+                <div class="vr mx-2 opacity-25" style="height: 1.5rem;"></div>
+                <button
+                    @click="clearAllFilters"
+                    class="btn-clear-filters"
+                >
+                  <i class="bi bi-x-circle"></i>
+                  <span>条件をすべてクリア</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="pe-2" style="min-width: 120px; text-align: right;">
             <FilterButton @confirm="handleFilterApply"/>
           </div>
 
@@ -38,20 +70,23 @@
               sort="firstPrintPublicationDate"
               direction="desc"
               @change-page="handlePageChange"
-          /> </div>
+          />
+        </div>
 
       </Transition>
     </div>
 
-    <div class="d-flex justify-content-center mt-5">
-      <Pagination
-          v-if="seriesStore.pagination"
-          :total-pages="seriesStore.pagination.totalPages"
-          :current-page="seriesStore.pagination.currentPage"
-          :is-first="seriesStore.pagination.isFirst"
-          :is-last="seriesStore.pagination.isLast"
-          @change-page="handlePageChange"
-      />
+    <div class="pagination-container mt-5 pt-4 border-top">
+      <div class="d-flex justify-content-center">
+        <Pagination
+            v-if="seriesStore.pagination"
+            :total-pages="seriesStore.pagination.totalPages"
+            :current-page="seriesStore.pagination.currentPage"
+            :is-first="seriesStore.pagination.isFirst"
+            :is-last="seriesStore.pagination.isLast"
+            @change-page="handlePageChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +94,7 @@
 <script setup lang="ts">
 import SeriesCardGrid from '../../components/ui/seriesCardGrid.vue'
 import {useSeriesStore} from "@/stores/Series";
-import {onMounted, watch} from "vue";
+import {computed, onMounted, watch} from "vue";
 import {useRoute, useRouter} from 'vue-router';
 import FilterButton from "@/components/ui/FilterButton.vue";
 import Pagination from "@/components/common/Pagination.vue";
@@ -143,5 +178,38 @@ async function handlePageChange(newPage: number) {
     }
   });
   await fetchSeriesData(null);
+}
+
+const activeFilters = computed(() => {
+  const query = route.query;
+  const skipKeys = ['page', 'sort', 'direction', 'size'];
+
+  return Object.entries(query)
+      .filter(([key, value]) => !skipKeys.includes(key) && value && value !== '')
+      .map(([key, value]) => ({
+        key,
+        label: value as string
+      }));
+});
+
+async function removeFilter(filterKey: string) {
+  const newQuery = {...route.query};
+  delete newQuery[filterKey];
+  newQuery.page = '1';
+
+  await router.push({query: newQuery});
+}
+
+async function clearAllFilters() {
+  const defaultQuery = {
+    page: '1',
+    sort: 'firstPrintPublicationDate',
+    direction: 'desc'
+  };
+
+  await router.push({
+    query: defaultQuery
+  });
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 </script>
