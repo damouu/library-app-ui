@@ -15,7 +15,7 @@
         </div>
 
         <div class="modal-body p-4">
-          <form @submit.prevent="applyFilters">
+          <form @submit.prevent="applyFilters" @keyup.enter="applyFilters">
             <div class="mb-3">
               <label class="form-label fw-semibold">タイトル</label>
               <input v-model="filters.title" type="text" class="form-control" placeholder="例: 呪術廻戦">
@@ -44,12 +44,20 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
+import {useRoute} from 'vue-router';
 
+const route = useRoute();
 const emit = defineEmits(['close', 'confirm']);
 
 const filters = ref({
   title: '', secondTitle: '', chapterNumber: ''
+});
+
+onMounted(() => {
+  filters.value.title = route.query.title || '';
+  filters.value.secondTitle = route.query.secondTitle || '';
+  filters.value.chapterNumber = route.query.chapterNumber || '';
 });
 
 const applyFilters = () => {
