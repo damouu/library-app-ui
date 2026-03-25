@@ -2,10 +2,12 @@ import {reactive, ref} from "vue";
 import {defineStore} from "pinia";
 import {Chapter} from "@/types/Chapter"
 import {api} from '@/plugins/gateway';
+import {Series} from "@/types/Series";
 
 export const useChapterStore = defineStore('Chapter', () => {
     const seriesList = ref<Chapter[]>([]);
     const currentChapter = ref<Chapter | null>(null);
+    const nextChapters = ref<Chapter | null>(null);
     const newChapters = ref<Chapter[] | null>(null);
     const Chapters = ref<Chapter[] | null>(null);
 
@@ -47,9 +49,10 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.totalPages,
                 item.chapterNumber,
                 item.coverArtworkUrl,
+                item.summary,
                 item.publicationDate,
-                item.seriesUuid,
-                item.book_uuid
+                item.book_uuid,
+                item.series
             ));
 
             pagination.value = {
@@ -71,10 +74,23 @@ export const useChapterStore = defineStore('Chapter', () => {
 
     async function getChapters(chapterUuid: string): Promise<void> {
         isLoading.value = true;
+
         try {
             const response = await api.get(`/api/catalogue/public/chapters/${chapterUuid}`, {});
 
             const item = response.data;
+
+            const seriesInstance = item.series ? new Series(
+                item.series.uuid,
+                item.series.title,
+                item.series.genre,
+                item.series.coverArtworkUrl,
+                item.series.illustrator,
+                item.series.publisher,
+                item.series.lastPrintPublicationDate,
+                item.series.firstPrintPublicationDate,
+                item.series.author
+            ) : null;
 
             currentChapter.value = new Chapter(
                 item.uuid,
@@ -83,9 +99,10 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.totalPages,
                 item.chapterNumber,
                 item.coverArtworkUrl,
+                item.summary,
                 item.publicationDate,
-                item.seriesUuid,
-                item.book_uuid
+                item.book_uuid,
+                seriesInstance
             );
 
         } catch (error) {
@@ -118,9 +135,10 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.totalPages,
                 item.chapterNumber,
                 item.coverArtworkUrl,
+                item.summary,
                 item.publicationDate,
-                item.seriesUuid,
-                item.book_uuid
+                item.book_uuid,
+                item.series
             ));
 
             pagination.value = {
@@ -156,6 +174,7 @@ export const useChapterStore = defineStore('Chapter', () => {
             Object.entries(params).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
         );
 
+
         try {
             const response = await api.get(`/api/catalogue/public/chapters`, {
                 params: cleanParams
@@ -169,9 +188,10 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.totalPages,
                 item.chapterNumber,
                 item.coverArtworkUrl,
+                item.summary,
                 item.publicationDate,
-                item.seriesUuid,
-                item.book_uuid
+                item.book_uuid,
+                item.series
             ));
 
             pagination.value = {
@@ -182,6 +202,7 @@ export const useChapterStore = defineStore('Chapter', () => {
                 isFirst: response.data.first,
                 pageSize: response.data.size
             };
+
             return true;
         } catch (error) {
             throw error;
@@ -221,6 +242,7 @@ export const useChapterStore = defineStore('Chapter', () => {
                 item.chapterCoverUrl,
                 null,
                 null,
+                null,
                 null
             ));
 
@@ -233,7 +255,48 @@ export const useChapterStore = defineStore('Chapter', () => {
         }
     }
 
+    async function getNextThreeChapters(currentChapterNumber: number, seriesUuid: string) {
+        const size = 3;
+        const collected: Chapter[] = [];
+
+
+        let apiPage = Math.ceil(currentChapterNumber / size) - 1;
+
+        if (apiPage < 0) apiPage = 0;
+
+        try {
+            const response = await api.get(`/api/catalogue/public/series/${seriesUuid}/chapters`, {
+                params: {page: apiPage, size: size}
+            });
+
+            const chapters = response.data.content;
+
+            const followers = chapters.filter((c: {
+                chapterNumber: number;
+            }) => c.chapterNumber > currentChapterNumber);
+            collected.push(...followers);
+
+
+            if (collected.length < 3) {
+                const nextRes = await api.get(`/api/catalogue/public/series/${seriesUuid}/chapters`, {
+                    params: {page: apiPage + 1, size: size}
+                });
+                if (nextRes.data?.content) {
+                    collected.push(...nextRes.data.content);
+                }
+            }
+
+            newChapters.value = collected.slice(0, 3);
+
+        } catch (error) {
+            console.error("Gallery fetch failed:", error);
+            newChapters.value = [];
+        }
+    }
+
     return {
+        getNextThreeChapters,
+        nextChapters,
         seriesList,
         isLoading,
         getSeriesChapters,
