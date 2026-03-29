@@ -88,7 +88,7 @@ import {useCommentStore} from "@/stores/Comment";
 import {useInventoryStore} from "@/stores/Inventory";
 import {useCartStore} from "@/stores/Cart";
 import {useUserStore} from "@/stores/User";
-import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import CopiesAvailable from "@/components/book/CopieAvailable.vue";
 import NoCopiesAvailable from "@/components/book/NoCopieAvailable.vue";
 import Pagination from "@/components/common/Pagination.vue";
@@ -110,23 +110,40 @@ async function handlePageChange(newPage: number) {
   await commentStore.getChapter(newPage + 1, 5, props.chapterUuid);
 }
 
-onMounted(async () => {
-  inventoryStore.checkAvailability(props.chapterUuid);
 
-  await nextTick();
+onUnmounted(() => {
+  inventoryStore.currentChapter = null;
+})
+
+
+const loadPageData = async (uuid: string) => {
+  inventoryStore.currentChapter = null;
+  page.value = 0;
+  await inventoryStore.checkAvailability(uuid);
+  await commentStore.getChapter(1, 5, uuid);
+};
+
+
+onMounted(async () => {
+  await loadPageData(props.chapterUuid);
 
   setTimeout(() => {
     window.scrollTo({top: 0, behavior: 'instant'});
   }, 50);
 });
 
-watch(() => props.chapterUuid, async () => {
-  await nextTick();
-  window.scrollTo({top: 0, behavior: 'smooth'});
-});
+watch(
+    () => props.chapterUuid,
+    async (newUuid) => {
+      if (newUuid) {
+        await loadPageData(newUuid);
+
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+    }
+);
 
 onUnmounted(() => {
   inventoryStore.currentChapter = null;
-})
-
+});
 </script>
