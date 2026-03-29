@@ -1,8 +1,8 @@
 <template>
-  <div class="container text-center">
-    <div class="row align-items-center">
-      <h3>現在の日付: {{ currentDateFormated }} &nbsp;&nbsp; 予想返却期限日: {{ dedeFormated }}</h3>
-    </div>
+  <div class="text-center mb-4">
+    <h3 class="m-0 fw-bold"> 現在の日付: {{ currentDateFormated }} &nbsp;&nbsp;
+      予想返却期限日: {{ dedeFormated }}
+    </h3>
   </div>
 </template>
 
