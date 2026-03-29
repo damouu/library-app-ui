@@ -1,5 +1,5 @@
 <template>
-  <div class="row g-4 justify-content-center">
+  <div class="row g-4 justify-content-center mb-3 mt-3">
     <div
         v-for="item in cartStore.items"
         :key="item.book_uuid"
