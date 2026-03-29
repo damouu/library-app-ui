@@ -1,5 +1,5 @@
 <template>
-  <h3>以下の{{ cartStore.items.length }}冊を貸し出しで宜しでしょうか</h3>
+  <h3>以下の{{ cartStore.items.length }}冊を貸し出しで宜しでしょうか。</h3>
 </template>
 
 <script lang="ts" setup>
