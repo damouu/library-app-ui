@@ -1,7 +1,13 @@
 <template>
-  <router-link v-slot="{ navigate }" custom to="/">
-    <button class="btn rounded ms-2 me-2" role="link" @click="navigate">
-      <i class="bi bi-shop-window h4">図書館アプリ</i>
-    </button>
-  </router-link>
+  <RouterLink to="/" class="logo-link">
+    <div class="d-flex align-items-center gap-2">
+      <div class="logo-icon">
+        <i class="bi bi-book-fill"></i>
+      </div>
+      <div>
+        <span class="logo-text">図書館アプリ</span>
+        <span class="logo-subtext">Library App</span>
+      </div>
+    </div>
+  </RouterLink>
 </template>
