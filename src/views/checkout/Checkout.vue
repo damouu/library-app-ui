@@ -31,8 +31,8 @@
       </div>
     </div>
 
-    <router-link to="home" class="btn btn-warning mt-4">
-      ホムページへ
+    <router-link :to="{ name: 'home' }" class="btn btn-primary mt-4">
+      ホームページ
     </router-link>
   </div>
 
