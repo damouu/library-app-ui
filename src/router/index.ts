@@ -23,11 +23,6 @@ const router = createRouter({
             props: true
         },
         {
-            path: '/student',
-            name: 'student-list',
-            component: () => import('@/views/user/StudentView.vue')
-        },
-        {
             path: '/news',
             redirect: '/book'
         },
@@ -71,11 +66,6 @@ const router = createRouter({
             name: 'series-details',
             props: true,
             component: () => import('@/views/chapter/chapterView.vue')
-        },
-        {
-            path: '/:pathMatch(.*)*',
-            name: 'not-found',
-            component: () => import('@/views/error/NotFoundView.vue')
         },
         {
             path: '/login',
