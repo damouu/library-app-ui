@@ -93,7 +93,7 @@
                   <router-link
                       :to="{ name: 'series', query: { illustrator: chapterStore.currentChapter.series.illustrator, page: 1}}"
                       class="text-decoration-none d-flex align-items-center">
-                    <h5 class="mb-0 text-dark fw-bold">{{ chapterStore.currentChapter.series.illustrator }}</h5>
+                    <h5 class="mb-0 text-primary fw-bold">{{ chapterStore.currentChapter.series.illustrator }}</h5>
                   </router-link>
                 </div>
               </div>
@@ -115,7 +115,7 @@
                   <router-link
                       :to="{ name: 'series', query: { publisher: chapterStore.currentChapter.series.publisher, page: 1}}"
                       class="text-decoration-none d-flex align-items-center">
-                    <h5 class="mb-0 text-dark fw-bold">{{ chapterStore.currentChapter.series.publisher }}</h5>
+                    <h5 class="mb-0 text-primary fw-bold">{{ chapterStore.currentChapter.series.publisher }}</h5>
                   </router-link>
                 </div>
               </div>
