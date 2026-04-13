@@ -3,7 +3,7 @@
     <button
         :disabled="cartStore.isLoading"
         @click="handleBorrowAction"
-        class="btn btn-warning py-3 shadow-sm"
+        class="btn btn-primary py-3 shadow-sm"
         style="min-width: 250px;"
     >
       <span v-if="cartStore.isLoading" class="spinner-border spinner-border-sm"></span>
@@ -31,6 +31,5 @@ const handleBorrowAction = async () => {
     alert("エラーが発生しました。もう一度お試しください。");
   }
 };
-
 
 </script>
