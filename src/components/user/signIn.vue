@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-danger shadow-sm p-4 w-50">
+  <div class="border border-black shadow-sm p-4 w-50">
 
     <h3 class="text-center mb-5">
       <i class="bi bi-box-arrow-in-right"></i>
@@ -21,7 +21,7 @@
         <input v-model="password" type="password" class="form-control" required/>
       </div>
 
-      <button :disabled="userStore.isLoading" type="submit" class="btn btn-warning w-50 offset-3 mt-3">
+      <button :disabled="userStore.isLoading" type="submit" class="btn btn-primary w-50 offset-3 mt-3">
         <span v-if="userStore.isLoading" class="spinner-border spinner-border-sm"></span>
         <span v-else>ログイン</span>
       </button>
