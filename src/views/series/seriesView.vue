@@ -7,7 +7,7 @@
 
           <div class="ps-3 border-start border-primary border-5" style="min-width: 250px;">
             <h1 class="fw-black text-dark mb-0 h2">
-              作品シリーズ<span class="text-primary">一覧</span>
+              作品シリーズ一覧
             </h1>
             <div class="d-flex align-items-center mt-1">
               <span class="text-muted small">タイトル別に全巻をチェック</span>
