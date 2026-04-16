@@ -9,9 +9,11 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-light">
+
+        <div class="modal-header text-white"
+             style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
           <h5 class="modal-title fw-bold">絞り込み検索</h5>
-          <button type="button" class="btn-close" @click="$emit('close')"></button>
+          <button type="button" class="btn-close btn-close-white" @click="$emit('close')"></button>
         </div>
 
         <div class="modal-body p-4">
@@ -47,9 +49,11 @@
         </div>
 
         <div class="modal-footer border-top-0 px-4 pb-4">
-          <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" @click="resetFilters">リセット</button>
+          <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" @click="resetFilters">リセット
+          </button>
           <button type="button" class="btn btn-primary px-4 rounded-pill" @click="applyFilters">検索する</button>
         </div>
+
       </div>
     </div>
   </div>
