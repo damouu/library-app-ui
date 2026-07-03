@@ -15,7 +15,6 @@
               :page="Number(route.query.page || 1) - 1"
               :size="12"
               sort="publicationDate"
-              direction="desc"
           />
         </div>
       </Transition>
