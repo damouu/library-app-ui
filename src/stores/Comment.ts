@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import {defineStore} from "pinia";
-import {Comment} from "@/types/Comment"
+import {Comment} from "@/models/Comment"
 import {useUserStore} from "@/stores/User";
 import {api} from '@/plugins/gateway';
 
