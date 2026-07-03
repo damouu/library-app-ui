@@ -7,11 +7,11 @@
     >
       <div
           v-for="(item, index) in props.displayedBooks"
-          :key="item.uuid"
+          :key="item.chapterUuid"
           class="col-6 col-sm-4 col-md-3 col-lg-2 mt-4 ranking-item"
       >
         <router-link
-            :to="{ name: 'chapter-details', params: { chapterUuid: item.uuid }}"
+            :to="{ name: 'chapter-details', params: { chapterUuid: item.chapterUuid }}"
             class="text-decoration-none text-reset"
         >
           <div class="card h-100 border-0 shadow-sm ranking-card">
@@ -42,10 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import { Chapter } from "@/types/Chapter";
+import {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
 
 const props = defineProps<{
-  displayedBooks: Chapter[];
+  displayedBooks: TopBorrowedChapter[];
 }>();
 
 const getRankClass = (rank: number) => {
