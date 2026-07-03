@@ -36,7 +36,8 @@
               <div class="d-flex flex-column gap-3 text-start">
 
                 <router-link
-                    :to="{ name: 'series-details', params: { seriesUuid: chapterStore.currentChapter.series.uuid, page: 1}}"
+                    :to="{ name: 'series-details', params: {
+                      seriesUuid: chapterStore.currentChapter.series.uuid, page: 1}}"
                     class="text-decoration-none d-flex align-items-center"
                 >
                   <i class="bi bi-book-half text-primary fs-5 text-center" style="width: 40px;"></i>
