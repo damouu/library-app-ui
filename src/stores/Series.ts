@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import {defineStore} from "pinia";
-import {Series} from "../types/Series";
+import {Series} from "../models/Series";
 import {api} from '@/plugins/gateway';
 
 export const useSeriesStore = defineStore('Series', () => {
