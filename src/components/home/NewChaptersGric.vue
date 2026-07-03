@@ -7,7 +7,7 @@
 
     <TransitionGroup name="fade-classic" tag="div" class="row gy-5">
       <div
-          v-for="chapter in chapterStore.newChapters"
+          v-for="chapter in chapterStore.Chapters"
           :key="chapter.uuid"
           class="col-6 col-sm-4 col-md-3 col-lg-2"
       >
