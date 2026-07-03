@@ -1,8 +1,14 @@
 import {reactive, ref} from "vue";
 import {defineStore} from "pinia";
-import {Chapter} from "@/types/Chapter"
+import {Chapter} from "@/models/Chapter"
 import {api} from '@/plugins/gateway';
-import {Series} from "@/types/Series";
+import {Series} from "@/models/Series";
+import {AnalyticService} from "@/services/AnalyticService";
+import type {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
+import type {PeriodKey} from "@/types/analytics/PeriodKey";
+import {CatalogService} from "@/services/CatalogService";
+import {mapPagination} from "@/mappers/PaginationMapper";
+
 
 export const useChapterStore = defineStore('Chapter', () => {
     const seriesList = ref<Chapter[]>([]);
@@ -11,12 +17,10 @@ export const useChapterStore = defineStore('Chapter', () => {
     const newChapters = ref<Chapter[] | null>(null);
     const Chapters = ref<Chapter[] | null>(null);
 
-    type PeriodKey = 'week' | 'lastweek' | 'lastmonth';
-
-    const rankings = reactive<Record<PeriodKey, Chapter[] | null>>({
-        week: null,
-        lastweek: null,
-        lastmonth: null
+    const rankings = reactive<Record<PeriodKey, TopBorrowedChapter[] | null>>({
+        CURRENT_WEEK: null,
+        LAST_WEEK: null,
+        LAST_MONTH: null
     });
 
     const isLoading = ref(false);
@@ -76,35 +80,31 @@ export const useChapterStore = defineStore('Chapter', () => {
         isLoading.value = true;
 
         try {
-            const response = await api.get(`/api/catalogue/public/chapters/${chapterUuid}`, {});
+            currentChapter.value = await CatalogService.getChapter(chapterUuid);
+        } finally {
+            isLoading.value = false;
+        }
+    }
 
-            const item = response.data;
 
-            const seriesInstance = item.series ? new Series(
-                item.series.uuid,
-                item.series.title,
-                item.series.genre,
-                item.series.coverArtworkUrl,
-                item.series.illustrator,
-                item.series.publisher,
-                item.series.lastPrintPublicationDate,
-                item.series.firstPrintPublicationDate,
-                item.series.author
-            ) : null;
+    async function getNews(page: number, size: number, sort: string): Promise<void> {
 
-            currentChapter.value = new Chapter(
-                item.uuid,
-                item.title,
-                item.secondTitle,
-                item.totalPages,
-                item.chapterNumber,
-                item.coverArtworkUrl,
-                item.summary,
-                item.publicationDate,
-                item.book_uuid,
-                seriesInstance
+        isLoading.value = true;
+
+        try {
+            const params = {page, size, sort};
+
+            const cleanParams = Object.fromEntries(
+                Object.entries(params).filter(([_, v]) =>
+                    v !== "" && v !== null && v !== undefined
+                )
             );
 
+            const chapterPage = await CatalogService.getChapters(cleanParams);
+
+            Chapters.value = chapterPage.content;
+            pagination.value = mapPagination(chapterPage);
+
         } catch (error) {
             throw error;
         } finally {
@@ -113,107 +113,31 @@ export const useChapterStore = defineStore('Chapter', () => {
     }
 
 
-    async function getNews(page: number, size: number, recent: string, direction: string,): Promise<void> {
+    async function getChapter(page: number, size: number, sort: string, direction: string, filters = {}): Promise<void> {
 
         isLoading.value = true;
 
         try {
-            const response = await api.get(`/api/catalogue/public/chapters`, {
-                params: {
-                    page: page,
-                    size: size,
-                    recent: recent,
-                    direction: direction
-                }
-            });
+            const params = {page, size, sort, direction, ...filters};
 
+            const cleanParams = Object.fromEntries(
+                Object.entries(params).filter(([_, v]) =>
+                    v !== "" && v !== null && v !== undefined
+                )
+            );
 
-            newChapters.value = response.data.content.map((item: any) => new Chapter(
-                item.uuid,
-                item.title,
-                item.secondTitle,
-                item.totalPages,
-                item.chapterNumber,
-                item.coverArtworkUrl,
-                item.summary,
-                item.publicationDate,
-                item.book_uuid,
-                item.series
-            ));
+            const chapterPage = await CatalogService.getChapters(cleanParams);
 
-            pagination.value = {
-                totalPages: response.data.totalPages,
-                totalElements: response.data.totalElements,
-                currentPage: response.data.number,
-                isLast: response.data.last,
-                isFirst: response.data.first,
-                pageSize: response.data.size
-            };
+            Chapters.value = chapterPage.content;
+            pagination.value = mapPagination(chapterPage);
 
-        } catch (error) {
-            throw error;
         } finally {
             isLoading.value = false;
         }
     }
 
 
-    async function getChapter(page: number, size: number, sort: string, direction: string, filters = {}): Promise<boolean> {
-
-        isLoading.value = true;
-
-        const params = {
-            page,
-            size,
-            sort,
-            direction,
-            ...filters
-        };
-
-        const cleanParams = Object.fromEntries(
-            Object.entries(params).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
-        );
-
-
-        try {
-            const response = await api.get(`/api/catalogue/public/chapters`, {
-                params: cleanParams
-            });
-
-
-            Chapters.value = response.data.content.map((item: any) => new Chapter(
-                item.uuid,
-                item.title,
-                item.secondTitle,
-                item.totalPages,
-                item.chapterNumber,
-                item.coverArtworkUrl,
-                item.summary,
-                item.publicationDate,
-                item.book_uuid,
-                item.series
-            ));
-
-            pagination.value = {
-                totalPages: response.data.totalPages,
-                totalElements: response.data.totalElements,
-                currentPage: response.data.number,
-                isLast: response.data.last,
-                isFirst: response.data.first,
-                pageSize: response.data.size
-            };
-
-            return true;
-        } catch (error) {
-            throw error;
-            return false;
-        } finally {
-            isLoading.value = false;
-        }
-    }
-
-
-    async function getTop(period: PeriodKey, page: number, size: number): Promise<void> {
+    async function getTop(period: PeriodKey): Promise<void> {
 
         isLoading.value = true;
 
@@ -222,34 +146,14 @@ export const useChapterStore = defineStore('Chapter', () => {
         }
 
         try {
-            const response = await api.get(`/api/analytics/public/top-chapters`, {
-                params: {
-                    page: page,
-                    size: size,
-                    period: period
-                }
-            });
 
+            const chapters = await AnalyticService.getTop(period);
 
-            const item = response.data;
-
-            const chapterArray = item.map((item: any) => new Chapter(
-                item.chapterUuid,
-                item.chapterTitle,
-                item.chapterSecondTitle,
-                null,
-                item.chapterNumber,
-                item.chapterCoverUrl,
-                null,
-                null,
-                null,
-                null
-            ));
-
-            rankings[period] = chapterArray;
+            rankings[period] = chapters;
 
         } catch (error) {
-            throw error;
+            console.error(error);
+
         } finally {
             isLoading.value = false;
         }
