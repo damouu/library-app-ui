@@ -3,7 +3,7 @@
     <top-chapters-button @period="handlePeriodChange"/>
     <TopChapters :displayedBooks="displayedBooks"/>
 
-    <NewChaptersGric ref="newReleaseGrid" />
+    <NewChaptersGric ref="newReleaseGrid"/>
 
     <div class="mt-5">
       <Pagination
@@ -25,23 +25,22 @@ import TopChapters from "@/components/home/TopChapters.vue";
 import TopChaptersButton from "@/components/home/TopChaptersButton.vue";
 import Pagination from "@/components/common/Pagination.vue";
 import NewChaptersGric from "@/components/home/NewChaptersGric.vue";
+import type {PeriodKey} from "@/types/analytics/PeriodKey";
 
 const chapterStore = useChapterStore();
 
 const newReleaseGrid = ref<any>(null);
 
-const period = ref<string>('week');
-
-type PeriodKey = 'week' | 'lastweek' | 'lastmonth';
+const period = ref<string>('CURRENT_WEEK');
 
 async function handlePeriodChange(newPeriod: PeriodKey) {
   period.value = newPeriod;
-  await chapterStore.getTop(newPeriod, 0, 6);
+  await chapterStore.getTop(newPeriod);
 }
 
 async function handlePageChange(newPage: number) {
   newReleaseGrid.value?.scrollToTop();
-  await chapterStore.getNews(newPage, 12, 'publicationDate', 'desc');
+  await chapterStore.getNews(newPage, 12, 'publicationDate,desc');
 }
 
 const displayedBooks = computed(() => {
@@ -49,8 +48,8 @@ const displayedBooks = computed(() => {
 });
 
 onMounted(() => {
-  chapterStore.getTop("week", 0, 6);
-  chapterStore.getNews(0, 12, "publicationDate", "desc")
+  chapterStore.getTop("CURRENT_WEEK");
+  chapterStore.getNews(0, 12, "publicationDate,desc")
 })
 
 </script>
