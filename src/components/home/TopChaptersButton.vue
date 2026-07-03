@@ -13,24 +13,24 @@
         <button
             type="button"
             class="btn btn-outline-primary"
-            :class="{ active: period === 'week' }"
-            @click="updatePeriod('week')"
+            :class="{ active: period === 'CURRENT_WEEK' }"
+            @click="updatePeriod('CURRENT_WEEK')"
         >
           今週
         </button>
         <button
             type="button"
             class="btn btn-outline-primary"
-            :class="{ active: period === 'lastweek' }"
-            @click="updatePeriod('lastweek')"
+            :class="{ active: period === 'LAST_WEEK' }"
+            @click="updatePeriod('LAST_WEEK')"
         >
           先週
         </button>
         <button
             type="button"
             class="btn btn-outline-primary"
-            :class="{ active: period === 'lastmonth' }"
-            @click="updatePeriod('lastmonth')"
+            :class="{ active: period === 'LAST_MONTH' }"
+            @click="updatePeriod('LAST_MONTH')"
         >
           先月
         </button>
@@ -42,10 +42,9 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
+import type {PeriodKey} from "@/types/analytics/PeriodKey";
 
-type PeriodKey = 'week' | 'lastweek' | 'lastmonth';
-
-const period = ref<PeriodKey>('week');
+const period = ref<PeriodKey>('CURRENT_WEEK');
 
 const emit = defineEmits<{
   (e: 'period', value: PeriodKey): void
