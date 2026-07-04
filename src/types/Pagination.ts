@@ -1,8 +1,21 @@
-export interface Pagination {
+import type {SortDTO} from "@/types/SortDTO";
+import type {PageableDTO} from "@/types/PageableDTO";
+
+export interface Page<T> {
+    content: T[];
+
+    pageable: PageableDTO;
+    sort: SortDTO;
+
     totalPages: number;
     totalElements: number;
-    currentPage: number;
-    isLast: boolean;
-    isFirst: boolean;
-    pageSize: number;
+
+    size: number;
+    number: number;
+
+    first: boolean;
+    last: boolean;
+
+    numberOfElements: number;
+    empty: boolean;
 }
