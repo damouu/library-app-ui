@@ -4,6 +4,7 @@ import {User} from "@/models/User";
 import {AuthFlowService} from "@/services/AuthFlowService";
 import {AuthService} from "@/services/AuthService";
 import {mapValidationErrors} from "@/mappers/ValidationErrorMapper";
+import type {RecordResponse} from "@/types/records/RecordResponse";
 
 export const useUserStore = defineStore('user', () => {
 
@@ -13,7 +14,7 @@ export const useUserStore = defineStore('user', () => {
 
     const token = ref<string | null>(localStorage.getItem('user_token'));
 
-    const borrowHistory = ref<any>(null);
+    const borrowHistory = ref<RecordResponse | null>(null);
 
     const isAuthenticated = computed(() => currentUser.value !== null);
 
@@ -24,7 +25,7 @@ export const useUserStore = defineStore('user', () => {
     const validationErrors = ref<Record<string, string[]>>({});
 
     const hasUnreturnedBorrows = computed(() => {
-        return borrowHistory.value?.unreturned_borrows === true;
+        return borrowHistory.value?.content[0].returnLately === true;
     });
 
 
@@ -54,7 +55,10 @@ export const useUserStore = defineStore('user', () => {
 
         try {
 
-            const {token: accessToken, user} = await AuthService.signUp(user_name, email, password, password_confirmation);
+            const {
+                token: accessToken,
+                user
+            } = await AuthService.signUp(user_name, email, password, password_confirmation);
 
             authenticate(user, accessToken);
 
