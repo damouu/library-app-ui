@@ -17,13 +17,13 @@ const inventoryStore = useInventoryStore();
 function addToCart() {
 
   const newItem: CartItem = {
-    book_uuid: inventoryStore.currentChapter.bookUuID,
+    bookUuid: inventoryStore.currentChapter.bookUuID,
     chapter: {
-      chapter_uuid: inventoryStore.currentChapter.chapterUuID,
-      chapter_title: chapterStore.currentChapter.title,
-      chapter_second_title: chapterStore.currentChapter.secondTitle,
-      chapter_number: chapterStore.currentChapter.chapterNumber,
-      chapter_cover_url: chapterStore.currentChapter.coverArtworkUrl,
+      uuid: inventoryStore.currentChapter.chapterUuID,
+      title: chapterStore.currentChapter.title,
+      secondTitle: chapterStore.currentChapter.secondTitle,
+      chapterNumber: chapterStore.currentChapter.chapterNumber,
+      coverArtworkUrl: chapterStore.currentChapter.coverArtworkUrl,
     }
   };
 
