@@ -5,37 +5,37 @@
       <p class="mt-2">履歴を読み込み中...</p>
     </div>
 
-    <div v-else-if="userStore.borrowHistory?.borrows.length === 0" class="text-center my-5">
+    <div v-else-if="!userStore.borrowHistory?.content?.length" class="text-center my-5">
       <i class="bi bi-archive h1 text-muted"></i>
       <p>貸出履歴はありません。</p>
     </div>
 
     <div v-else>
-      <div v-for="record in userStore.borrowHistory.borrows" :key="record.uuid" class=" mb-4 border-0 shadow-sm">
+      <div v-for="record in userStore.borrowHistory.content" :key="record.borrowUuid" class=" mb-4 border-0 shadow-sm">
 
         <div class="bg-light d-flex justify-content-between align-items-center">
 
           <div class="rounded-circle">
-            <span class="small text-muted d-block ">注文番号: {{ record.uuid.split('-')[0] }}</span>
+            <span class="small text-muted d-block ">注文番号: {{ record.borrowUuid.split('-')[0] }}</span>
             <span class="badge rounded-pill bg-dark">
-              {{ record.startDate }} 〜 {{ record.expectedEndDate }}
+              {{ record.borrowStartDate }} 〜 {{ record.borrowEndDate }}
             </span>
           </div>
 
-          <div v-if="record.actualReturnDate !== 'null' && record.actualReturnDate && record.returnLately">
+          <div v-if="record.borrowReturnDate !== 'null' && record.borrowReturnDate && record.returnLately">
             <span class="badge rounded-pill bg-danger fs-6 p-2">期限超過 (返却済)</span>
           </div>
 
-          <div v-else-if="(record.actualReturnDate === 'null' || !record.actualReturnDate) && record.returnLately">
+          <div v-else-if="(record.borrowReturnDate === 'null' || !record.borrowReturnDate) && record.returnLately">
             <span class="badge rounded-pill bg-warning text-dark fs-6 p-2">未返却</span>
           </div>
 
-          <div v-else-if="record.actualReturnDate !== 'null' && record.actualReturnDate && !record.returnLately">
+          <div v-else-if="record.borrowReturnDate !== 'null' && record.borrowReturnDate && !record.returnLately">
             <span class="badge rounded-pill bg-success fs-6 p-2">期日内返却</span>
           </div>
 
-          <div v-if="record.actualReturnDate === null || record.actualReturnDate === 'null'">
-            <button @click="openReturnModal(record.uuid)" class="btn btn-sm btn-warning fw-bold shadow-sm">
+          <div v-if="record.borrowReturnDate === null || record.borrowReturnDate === 'null'">
+            <button @click="openReturnModal(record.borrowUuid)" class="btn btn-sm btn-warning fw-bold shadow-sm">
               返却する
             </button>
           </div>
@@ -43,7 +43,7 @@
           <div v-else>
             <div class="text-end">
               <span class="badge bg-success d-block mb-1">返却済み </span>
-              <small class="text-muted m-lg-3" style="font-size: 1rem;">返却日: {{ record.actualReturnDate }}</small>
+              <small class="text-muted m-lg-3" style="font-size: 1rem;">返却日: {{ record.borrowReturnDate }}</small>
             </div>
           </div>
 
@@ -51,10 +51,10 @@
 
         <div class="">
           <div class="d-flex gap-3 overflow-auto py-2">
-            <div v-for="chapter in record.chapters" :key="chapter.uuid" class="chapter-item">
+            <div v-for="chapter in record.chapters" :key="chapter.chapterUuid" class="chapter-item">
 
               <router-link
-                  :to="{ name: 'chapter-details', params: { chapterUuid: chapter.uuid }}"
+                  :to="{ name: 'chapter-details', params: { chapterUuid: chapter.chapterUuid }}"
                   class="text-decoration-none text-reset"
               >
 
