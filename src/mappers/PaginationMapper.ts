@@ -1,7 +1,6 @@
-import type {ChapterPage} from "@/types/chapter/ChapterPage";
-import type {Pagination} from "@/types/Pagination";
+import type {Page} from "@/types/Pagination";
 
-export function mapPagination(page: ChapterPage): Pagination {
+export function mapPagination<T>(page: Page<T>) {
     return {
         totalPages: page.totalPages,
         totalElements: page.totalElements,
