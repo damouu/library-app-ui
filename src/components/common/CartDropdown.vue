@@ -3,29 +3,29 @@
     <div class="flex-grow-1 overflow-auto cart-scroll-container">
       <div
           v-for="item in cartStore.items"
-          :key="item.book_uuid"
+          :key="item.bookUuid"
           class="cart-item-snap d-flex align-items-center border-bottom py-2"
       >
         <router-link
-            :to="{ name: 'chapter-details', params: { chapterUuid: item.chapter.chapter_uuid }}"
+            :to="{ name: 'chapter-details', params: { chapterUuid: item.chapter.chapterUuid }}"
             class="d-flex align-items-center flex-grow-1 text-decoration-none text-reset min-width-0"
             @click="$emit('close')"
         >
           <div class="cart-thumb-wrapper me-3">
-            <img :src="item.chapter.chapter_cover_url" class="cart-thumb" alt="Cover">
+            <img :src="item.chapter.coverArtworkUrl" class="cart-thumb" alt="Cover">
           </div>
 
           <div class="flex-grow-1 min-width-0">
             <h6 class="text-truncate mb-1">
-              {{ item.chapter.chapter_title }}
+              {{ item.chapter.title }}
             </h6>
-            <span class="text-muted small">巻 {{ item.chapter.chapter_number }}</span>
+            <span class="text-muted small">巻 {{ item.chapter.chapterNumber }}</span>
           </div>
         </router-link>
 
         <div class="ms-2">
           <button
-              @click.stop="cartStore.removeFromCart(item.book_uuid)"
+              @click.stop="cartStore.removeFromCart(item.bookUuid)"
               class="btn btn-outline-danger btn-sm"
               title="Supprimer"
           >
