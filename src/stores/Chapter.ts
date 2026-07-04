@@ -2,7 +2,6 @@ import {reactive, ref} from "vue";
 import {defineStore} from "pinia";
 import {Chapter} from "@/models/Chapter"
 import {api} from '@/plugins/gateway';
-import {Series} from "@/models/Series";
 import {AnalyticService} from "@/services/AnalyticService";
 import type {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
 import type {PeriodKey} from "@/types/analytics/PeriodKey";
