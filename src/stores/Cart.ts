@@ -1,21 +1,10 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
-import {api} from "@/plugins/gateway";
 import {useUserStore} from "@/stores/User";
+import {BorrowFlowService} from "@/services/BorrowFlowService";
+import borrowHistory from "@/components/user/BorrowHistory.vue";
+import type {CartItem} from "@/types/cart/CartItem";
 
-
-export interface CartItem {
-    book_uuid: string;
-    chapter: Chapter;
-}
-
-interface Chapter {
-    chapter_uuid: string;
-    chapter_title: string;
-    chapter_second_title: string;
-    chapter_number: number;
-    chapter_cover_url: string;
-}
 
 export const useCartStore = defineStore('Cart', () => {
     const items = ref<CartItem[]>([]);
@@ -30,7 +19,7 @@ export const useCartStore = defineStore('Cart', () => {
             return;
         }
 
-        const exists = items.value.some(item => item.book_uuid === newItem.book_uuid);
+        const exists = items.value.some(item => item.bookUuid === newItem.bookUuid);
 
         if (!exists) {
             items.value.push(newItem);
@@ -38,7 +27,7 @@ export const useCartStore = defineStore('Cart', () => {
     }
 
     function removeFromCart(chapterUuid: string) {
-        items.value = items.value.filter(item => item.book_uuid !== chapterUuid);
+        items.value = items.value.filter(item => item.bookUuid !== chapterUuid);
     }
 
     function clearCart() {
@@ -47,48 +36,25 @@ export const useCartStore = defineStore('Cart', () => {
 
     async function borrow(): Promise<boolean> {
 
-        // isLoading.value = true;
-
         if (!userStore.token) {
-            alert("ログインしてください (Please login to borrow)");
+            alert("ログインしてください");
             return false;
         }
 
-        const payload = {
-            data: items.value.map(item => ({
-                book_uuid: item.book_uuid,
-                chapter: {
-                    chapter_uuid: item.chapter.chapter_uuid,
-                    chapter_title: item.chapter.chapter_title,
-                    chapter_second_title: item.chapter.chapter_second_title,
-                    chapter_number: item.chapter.chapter_number,
-                    chapter_cover_url: item.chapter.chapter_cover_url
-                }
-            }))
-        };
+        isLoading.value = true;
 
         try {
 
-            isLoading.value = true;
+            const {transaction, records} = await BorrowFlowService.borrow(items.value);
 
-            const response = await api.post(`/api/borrow/books`, payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userStore.token}`
-                },
-            });
+            lastTransaction.value = {...transaction.data, borrowedItems: [...items.value]};
 
-            lastTransaction.value = {
-                ...response.data.data,
-                borrowedItems: [...items.value]
-            };
+            borrowHistory.value = records;
 
             clearCart();
-            await userStore.getRecords(0, 5, "borrow_start_date", "desc");
+
             return true;
 
-        } catch (error) {
-            return false;
         } finally {
             isLoading.value = false;
         }
