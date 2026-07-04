@@ -7,7 +7,7 @@
     >
       <div
           v-for="(item, index) in props.displayedBooks"
-          :key="item.chapterUuid"
+            :key="item.chapterUuid"
           class="col-6 col-sm-4 col-md-3 col-lg-2 mt-4 ranking-item"
       >
         <router-link
