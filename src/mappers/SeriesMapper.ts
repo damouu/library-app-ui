@@ -1,10 +1,7 @@
 import type {SeriesDTO} from "@/types/chapter/SeriesDTO";
 import {Series} from "@/models/Series";
 
-export function mapSeries(dto: SeriesDTO | null): Series | null {
-    if (!dto) {
-        return null;
-    }
+export function mapSeries(dto: SeriesDTO): Series {
 
     return new Series(
         dto.uuid,
