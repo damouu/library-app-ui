@@ -15,9 +15,9 @@ export const useInventoryStore = defineStore('Inventory', () => {
             const response = await api.get(`/api/inventory/public/${chapterUuid}`);
 
             currentChapter.value = new Inventory(
-                response.data.bookUuID,
-                response.data.chapterUuID,
-                response.data.currentlyBorrowed,
+                response.data.book_uuid,
+                response.data.chapter_uuid,
+                response.data.currently_borrowed,
             );
 
         } catch (error) {
