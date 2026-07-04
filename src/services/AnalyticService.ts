@@ -7,13 +7,13 @@ import type {PeriodKey} from "@/types/analytics/PeriodKey";
 
 export class AnalyticService {
 
-    static async getTop(period: PeriodKey): Promise<TopBorrowedChapter[]> {
+    static async getTop(period: PeriodKey, page: number, size: number,): Promise<TopBorrowedChapter[]> {
 
         const response = await api.get<TopBorrowedChapterDTO[]>(
             "/api/analytics/public/top-chapters",
             {
                 params: {
-                    period
+                    period, page, size
                 }
             }
         );
