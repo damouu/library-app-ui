@@ -68,7 +68,6 @@
               :page="0"
               :size="6"
               sort="firstPrintPublicationDate"
-              direction="desc"
               @change-page="handlePageChange"
           />
         </div>
@@ -140,7 +139,6 @@ async function fetchSeriesData(size: number | null) {
   const apiPage = pageFromUrl - 1;
 
   const sortField = (route.query.sort as string) || 'firstPrintPublicationDate';
-  const sortDir = (route.query.direction as string) || 'desc';
 
   const filters = {
     title: route.query.title as string || '',
@@ -154,7 +152,6 @@ async function fetchSeriesData(size: number | null) {
       apiPage,
       size,
       sortField,
-      sortDir,
       filters
   );
 }
