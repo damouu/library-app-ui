@@ -16,7 +16,6 @@ export class AuthService {
         });
 
         const token = response.data.access_token;
-        console.log(token);
 
         const payload = decodeJwt<UserJwt>(token);
 
