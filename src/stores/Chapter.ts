@@ -136,7 +136,7 @@ export const useChapterStore = defineStore('Chapter', () => {
     }
 
 
-    async function getTop(period: PeriodKey): Promise<void> {
+    async function getTop(period: PeriodKey, page: number, size: number): Promise<void> {
 
         isLoading.value = true;
 
@@ -146,7 +146,7 @@ export const useChapterStore = defineStore('Chapter', () => {
 
         try {
 
-            const chapters = await AnalyticService.getTop(period);
+            const chapters = await AnalyticService.getTop(period, page, size);
 
             rankings[period] = chapters;
 
