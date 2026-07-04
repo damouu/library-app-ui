@@ -17,7 +17,7 @@
               </div>
 
               <div v-else-if="inventoryStore.currentChapter">
-                <div v-if="cartStore.items.some(item => item.chapter.chapter_uuid === props.chapterUuid)">
+                <div v-if="cartStore.items.some(item => item.chapter.chapterUuid === props.chapterUuid)">
                   <h4 class="text-primary h6 fw-bold">
                     カートに入りました <i class="bi bi-check-circle-fill ms-1"/>
                   </h4>
