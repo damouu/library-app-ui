@@ -7,7 +7,7 @@ export class AuthFlowService {
 
         const {user, token} = await AuthService.signIn(email, password);
 
-        const records = await RecordService.getRecords(0, 5);
+        const records = await RecordService.getRecords(0, 5, token);
 
         return {
             user,
