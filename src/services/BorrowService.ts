@@ -1,17 +1,27 @@
 import {api} from "@/plugins/gateway";
-import type {BorrowSelection} from "@/types/borrow/BorrowSelection";
 import {mapBorrowRequest} from "@/mappers/mapBorrowRequest";
-import type {BorrowRequestDTO} from "@/types/borrow/BorrowRequestDTO";
+import type {BorrowSelection} from "@/types/borrow/BorrowSelection";
+import type {ReturnBorrowResponseDTO} from "@/types/borrow/ReturnBorrowResponseDTO";
+import type {BorrowResponseDTO} from "@/types/borrow/BorrowResponseDTO";
 
 export class BorrowService {
 
-    static async borrow(selections: BorrowSelection[]): Promise<BorrowRequestDTO> {
+    static async borrow(selections: BorrowSelection[]): Promise<BorrowResponseDTO> {
 
         const payload = mapBorrowRequest(selections);
 
-        const response = await api.post<BorrowRequestDTO>(
+        const response = await api.post<BorrowResponseDTO>(
             "/api/borrow/books",
             payload
+        );
+
+        return response.data;
+    }
+
+    static async return(borrowUuid: string): Promise<ReturnBorrowResponseDTO> {
+
+        const response = await api.post<ReturnBorrowResponseDTO>(
+            `/api/borrow/${borrowUuid}/return`
         );
 
         return response.data;
