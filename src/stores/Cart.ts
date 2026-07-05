@@ -2,7 +2,6 @@ import {defineStore} from 'pinia';
 import {ref} from 'vue';
 import {useUserStore} from "@/stores/User";
 import {BorrowFlowService} from "@/services/BorrowFlowService";
-import borrowHistory from "@/components/user/BorrowHistory.vue";
 import type {CartItem} from "@/types/cart/CartItem";
 
 
@@ -45,16 +44,18 @@ export const useCartStore = defineStore('Cart', () => {
 
         try {
 
-            const {transaction, records} = await BorrowFlowService.borrow(items.value);
+            const {transaction, borrow} = await BorrowFlowService.borrow(items.value);
 
-            lastTransaction.value = {...transaction.data, borrowedItems: [...items.value]};
+            lastTransaction.value = {...transaction, borrowedItems: [...items.value]};
 
-            borrowHistory.value = records;
+            userStore.addBorrow(borrow);
 
             clearCart();
 
             return true;
 
+        } catch (error) {
+            throw error;
         } finally {
             isLoading.value = false;
         }
