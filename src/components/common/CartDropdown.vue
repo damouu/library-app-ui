@@ -7,7 +7,7 @@
           class="cart-item-snap d-flex align-items-center border-bottom py-2"
       >
         <router-link
-            :to="{ name: 'chapter-details', params: { chapterUuid: item.chapter.chapterUuid }}"
+            :to="{ name: 'chapter-details', params: { chapterUuid: item.chapter.uuid }}"
             class="d-flex align-items-center flex-grow-1 text-decoration-none text-reset min-width-0"
             @click="$emit('close')"
         >
