@@ -3,8 +3,11 @@ import {defineStore} from "pinia";
 import {User} from "@/models/User";
 import {AuthFlowService} from "@/services/AuthFlowService";
 import {AuthService} from "@/services/AuthService";
+import {BorrowService} from "@/services/BorrowService";
 import {mapValidationErrors} from "@/mappers/ValidationErrorMapper";
 import type {RecordResponse} from "@/types/records/RecordResponse";
+import {RecordService} from "@/services/RecordService";
+import type {BorrowDTO} from "@/types/records/BorrowDTO";
 
 export const useUserStore = defineStore('user', () => {
 
@@ -25,7 +28,9 @@ export const useUserStore = defineStore('user', () => {
     const validationErrors = ref<Record<string, string[]>>({});
 
     const hasUnreturnedBorrows = computed(() => {
-        return borrowHistory.value?.content[0].returnLately === true;
+        return borrowHistory.value?.content.some(
+            borrow => borrow.borrowReturnDate === null
+        ) ?? false;
     });
 
 
@@ -37,12 +42,13 @@ export const useUserStore = defineStore('user', () => {
         isLoading.value = true;
 
         try {
-            const {user, token: accessToken, records} = await AuthFlowService.login(email, password);
+            const {user, token: accessToken} =
+                await AuthFlowService.login(email, password);
 
             authenticate(user, accessToken);
-            borrowHistory.value = records;
 
-        } catch (error) {
+            borrowHistory.value = await RecordService.getRecords(0, 5);
+
         } finally {
             isLoading.value = false;
         }
@@ -62,6 +68,8 @@ export const useUserStore = defineStore('user', () => {
 
             authenticate(user, accessToken);
 
+            borrowHistory.value = createEmptyBorrowHistory();
+
         } catch (error: any) {
 
             if (error.response?.status === 422) {
@@ -73,6 +81,34 @@ export const useUserStore = defineStore('user', () => {
 
             throw error;
 
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function returnBorrow(borrowUuid: string) {
+
+        isLoading.value = true;
+        authError.value = null;
+
+        try {
+
+            const returnedBorrow = await BorrowService.return(borrowUuid);
+
+            const borrow = borrowHistory.value?.content.find(
+                b => b.borrowUuid === borrowUuid
+            );
+
+            if (borrow) {
+                borrow.borrowReturnDate = returnedBorrow.returnDate;
+                borrow.returnLately = returnedBorrow.isLate;
+                borrow.daysLate = returnedBorrow.daysLate;
+                borrow.lateFee = returnedBorrow.fineAmount;
+            }
+            return returnedBorrow;
+
+        } catch (error) {
+            throw error;
         } finally {
             isLoading.value = false;
         }
@@ -91,6 +127,47 @@ export const useUserStore = defineStore('user', () => {
         localStorage.removeItem("user_token");
     }
 
+    function addBorrow(borrow: BorrowDTO) {
+        if (!borrowHistory.value) {
+            return;
+        }
+
+        borrowHistory.value.content.unshift(borrow);
+        borrowHistory.value.totalElements++;
+        borrowHistory.value.numberOfElements++;
+    }
+
+    function createEmptyBorrowHistory(): RecordResponse {
+        return {
+            content: [],
+            pageable: {
+                pageNumber: 0,
+                offset: 0,
+                pageSize: 5,
+                paged: true,
+                unpaged: false,
+                sort: {
+                    sorted: false,
+                    unsorted: true,
+                    empty: true
+                }
+            },
+            sort: {
+                sorted: false,
+                unsorted: true,
+                empty: true
+            },
+            totalPages: 0,
+            totalElements: 0,
+            size: 5,
+            number: 0,
+            first: true,
+            last: true,
+            numberOfElements: 0,
+            empty: true
+        };
+    }
+
 
     return {
         signIn,
@@ -99,7 +176,9 @@ export const useUserStore = defineStore('user', () => {
         isAuthenticated,
         isLoading,
         token,
+        addBorrow,
         authError,
+        returnBorrow,
         borrowHistory,
         hasUnreturnedBorrows,
         recordsLoading,
