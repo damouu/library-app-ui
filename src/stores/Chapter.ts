@@ -148,7 +148,7 @@ export const useChapterStore = defineStore('Chapter', () => {
 
             const chapters = await AnalyticService.getTop(period, page, size);
 
-            rankings[period] = chapters;
+            rankings[period] = chapters.content;
 
         } catch (error) {
             console.error(error);
