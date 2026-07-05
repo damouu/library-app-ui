@@ -1,4 +1,4 @@
-import type {TopBorrowedChapterDTO} from "@/types/chapter/TopBorrowedChapterDTO";
+import type {TopBorrowedChapterDTO} from "@/types/analytics/TopBorrowedChapterDTO";
 import type {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
 
 export function mapTopBorrowedChapter(dto: TopBorrowedChapterDTO): TopBorrowedChapter {
