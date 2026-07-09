@@ -117,7 +117,13 @@ export const useChapterStore = defineStore('Chapter', () => {
         isLoading.value = true;
 
         try {
-            const params = {page, size, sort, direction, ...filters};
+
+            const params = {
+                page,
+                size,
+                sort: direction ? `${sort},${direction}` : sort,
+                ...filters
+            };
 
             const cleanParams = Object.fromEntries(
                 Object.entries(params).filter(([_, v]) =>
