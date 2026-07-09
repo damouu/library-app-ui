@@ -3,6 +3,7 @@ import {defineStore} from "pinia";
 import {Comment} from "@/models/Comment"
 import {useUserStore} from "@/stores/User";
 import {api} from '@/plugins/gateway';
+import {CommentService} from "@/services/CommentService";
 
 export const useCommentStore = defineStore('Comment', () => {
     const commentsList = ref<Comment[]>([]);
@@ -16,37 +17,16 @@ export const useCommentStore = defineStore('Comment', () => {
         totalElements: 0
     });
 
+
     async function getChapter(page: number, size: number, chapterUuid: string): Promise<void> {
         isLoading.value = true;
+
         try {
-            const response = await api.get(`/api/comment/public/chapter/${chapterUuid}`, {
-                params: {
-                    page: page,
-                    size: size
-                }
-            });
 
-            commentsList.value = response.data.data.map((item: any) => new Comment(
-                item.chapterUuid,
-                item.commentUuid,
-                item.content,
-                item.deletedAt,
-                item.createdAt,
-                item.updatedAt,
-                item.userName,
-                item.avatar_URL
-            ));
+            const response = await CommentService.getChapter(page, size, chapterUuid);
 
-            const meta = response.data.meta;
-
-            pagination.value = {
-
-                currentPage: meta.Page - 1,
-                totalPages: Math.ceil(meta.total / meta.Size),
-                isFirst: meta.Page === 1,
-                isLast: meta.Page >= Math.ceil(meta.total / meta.Size),
-                totalElements: meta.total
-            };
+            commentsList.value = response.comments;
+            pagination.value = response.pagination;
 
         } catch (error) {
             throw error;
@@ -59,62 +39,28 @@ export const useCommentStore = defineStore('Comment', () => {
         isLoading.value = true;
 
         try {
-            const response = await api.post(
-                `/api/comment/chapter/${chapterUuid}`,
-                {
-                    comment: content
-                },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${userStore.token}`
-                    }
-                }
-            );
 
-            if (response.status === 201 || response.data === true) {
+            const comment = await CommentService.postComment(chapterUuid, content);
 
-                const commentPosted: Comment = {
-                    chapterUuid: chapterUuid,
-                    userName: userStore.currentUser.name,
-                    avatar_URL: userStore.currentUser.avatar_img_url,
-                    createdAt: new Date().toISOString(),
-                    content: content,
-                };
+            commentsList.value.unshift(comment);
 
-                commentsList.value.unshift(commentPosted);
-
-                if (commentsList.value.length > 5) {
-                    commentsList.value.pop();
-                }
+            if (commentsList.value.length > 5) {
+                commentsList.value.pop();
             }
 
-        } catch (error) {
-            console.error("Comment post failed:", error);
-            throw error;
         } finally {
             isLoading.value = false;
         }
     }
 
     async function updateComment(uuid: string, content: string): Promise<boolean> {
+
         isLoading.value = true;
 
         try {
-            const response = await api.put(
-                `/api/comment/${uuid}`,
-                {
-                    comment: content
-                },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${userStore.token}`
-                    }
-                }
-            );
 
-        } catch (error) {
-            console.error("Comment post failed:", error);
-            throw error;
+            await CommentService.updateComment(uuid, content);
+
         } finally {
             isLoading.value = false;
             return true
