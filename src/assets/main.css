@@ -71,6 +71,7 @@ body {
     padding-right: 12px;
 }
 
+
 .cart-item-snap {
     scroll-snap-align: start;
     padding: 10px 0;
@@ -236,6 +237,12 @@ body {
     background-color: #ffffff;
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
 }
 
 .comment-avatar {
