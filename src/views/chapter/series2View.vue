@@ -73,7 +73,7 @@
               :page="0"
               :size="12"
               sort="publicationDate"
-              direction="desc"
+              direction="asc"
           />
         </div>
       </Transition>
@@ -122,7 +122,7 @@ onMounted(async () => {
   }
 
   if (!query.direction) {
-    query.direction = 'desc';
+    query.direction = 'asc';
     needsReplace = true;
   }
 
@@ -138,7 +138,7 @@ async function fetchChaptersData(size: number) {
   const page = route.query.page ? Number(route.query.page) - 1 : 0;
 
   const sortField = (route.query.sort as string) || 'publicationDate';
-  const sortDir = (route.query.direction as string) || 'desc';
+  const sortDir = (route.query.direction as string) || 'asc';
 
   const filters = {
     title: route.query.title as string || '',
@@ -212,7 +212,7 @@ async function clearAllFilters() {
     query: {
       page: '1',
       sort: 'publicationDate',
-      direction: 'desc'
+      direction: 'asc'
     }
   });
   window.scrollTo({top: 0, behavior: 'smooth'});
