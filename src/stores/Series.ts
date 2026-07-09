@@ -36,9 +36,6 @@ export const useSeriesStore = defineStore('Series', () => {
 
             return true;
 
-        } catch (error) {
-            console.error("Filter failed", error);
-            return false;
         } finally {
             isLoading.value = false;
         }
