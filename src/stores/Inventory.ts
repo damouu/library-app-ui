@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {Inventory} from "@/types/Inventory"
 import {ref} from 'vue';
-import {api} from '@/plugins/gateway';
+import {InventoryService} from "@/services/InventoryService";
 
 export const useInventoryStore = defineStore('Inventory', () => {
     const currentChapter = ref<Inventory | null>(null);
@@ -12,16 +12,9 @@ export const useInventoryStore = defineStore('Inventory', () => {
         isLoading.value = true;
 
         try {
-            const response = await api.get(`/api/inventory/public/${chapterUuid}`);
 
-            currentChapter.value = new Inventory(
-                response.data.book_uuid,
-                response.data.chapter_uuid,
-                response.data.currently_borrowed,
-            );
+            currentChapter.value = await InventoryService.checkAvailability(chapterUuid);
 
-        } catch (error) {
-            currentChapter.value = null;
         } finally {
             isLoading.value = false;
         }
