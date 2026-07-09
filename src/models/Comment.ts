@@ -10,7 +10,7 @@ export class Comment {
     private _avatar_URL: string;
 
 
-    constructor(chapterUuid: string, commentUuid: string, content: string, deletedAt: string | null, createdAt: string, updatedAt: string, userName: string, avatar_URL: string) {
+    constructor(chapterUuid: string, commentUuid: string, content: string, deletedAt: string | null, createdAt: string, updatedAt: string | null, userName: string, avatar_URL: string) {
         this._chapterUuid = chapterUuid;
         this._commentUuid = commentUuid;
         this._content = content;
@@ -63,7 +63,7 @@ export class Comment {
         this._createdAt = value;
     }
 
-    get updatedAt(): string {
+    get updatedAt(): string | null {
         return this._updatedAt;
     }
 
