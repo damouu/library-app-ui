@@ -36,8 +36,7 @@
           <RouterLink to="/profile" class="profile-link">
             <img
                 :src="authStore.currentUser?.avatar_img_url"
-                class="rounded-circle border border-2 border-primary shadow-sm"
-                style="width: 36px; height: 36px; object-fit: cover;"
+                class="avatar"
                 alt="Profile"
             >
           </RouterLink>
