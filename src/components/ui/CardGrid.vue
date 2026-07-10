@@ -44,7 +44,6 @@ const chapterStore = useChapterStore();
 const props = defineProps<{
   seriesUuid: string,
   sort: string,
-  direction: string,
   page: number,
   size: number,
 }>();
