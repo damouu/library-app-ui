@@ -1,6 +1,6 @@
 import type {ChapterDTO} from "./ChapterDTO";
-import type {PageableDTO} from "../PageableDTO";
-import type {SortDTO} from "../SortDTO";
+import type {PageableDTO} from "../common/PageableDTO";
+import type {SortDTO} from "../common/SortDTO";
 
 export interface ChapterPageDTO {
     content: ChapterDTO[];
