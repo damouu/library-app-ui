@@ -54,9 +54,8 @@ export const useCartStore = defineStore('Cart', () => {
 
             return true;
 
-        } catch (error) {
-            throw error;
         } finally {
+            
             isLoading.value = false;
         }
     }
