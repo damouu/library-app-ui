@@ -1,14 +1,14 @@
 import {ref} from "vue";
 import {defineStore} from "pinia";
 import {Comment} from "@/models/Comment"
-import {useUserStore} from "@/stores/User";
-import {api} from '@/plugins/gateway';
 import {CommentService} from "@/services/CommentService";
 
 export const useCommentStore = defineStore('Comment', () => {
+
     const commentsList = ref<Comment[]>([]);
+
     const isLoading = ref(false);
-    const userStore = useUserStore();
+
     const pagination = ref({
         totalPages: 0,
         currentPage: 0,
@@ -19,6 +19,7 @@ export const useCommentStore = defineStore('Comment', () => {
 
 
     async function getChapter(page: number, size: number, chapterUuid: string): Promise<void> {
+
         isLoading.value = true;
 
         try {
@@ -26,16 +27,17 @@ export const useCommentStore = defineStore('Comment', () => {
             const response = await CommentService.getChapter(page, size, chapterUuid);
 
             commentsList.value = response.comments;
+
             pagination.value = response.pagination;
 
-        } catch (error) {
-            throw error;
         } finally {
+
             isLoading.value = false;
         }
     }
 
     async function postComment(chapterUuid: string, content: string): Promise<void> {
+
         isLoading.value = true;
 
         try {
@@ -45,10 +47,12 @@ export const useCommentStore = defineStore('Comment', () => {
             commentsList.value.unshift(comment);
 
             if (commentsList.value.length > 5) {
+
                 commentsList.value.pop();
             }
 
         } finally {
+
             isLoading.value = false;
         }
     }
@@ -62,32 +66,28 @@ export const useCommentStore = defineStore('Comment', () => {
             await CommentService.updateComment(uuid, content);
 
         } finally {
+
             isLoading.value = false;
+
             return true
         }
     }
 
 
     async function deleteComment(commentUuid: string): Promise<void> {
+
         isLoading.value = true;
 
         try {
-            const response = await api.delete(
-                `/api/comment/${commentUuid}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${userStore.token}`
-                    }
-                }
-            );
+
+            await CommentService.deleteComment(commentUuid);
 
             const index = commentsList.value.findIndex(c => c.commentUuid === commentUuid);
+
             commentsList.value.splice(index, 1);
 
-        } catch (error) {
-            console.error("Comment delete failed:", error);
-            throw error;
         } finally {
+
             isLoading.value = false;
         }
     }
