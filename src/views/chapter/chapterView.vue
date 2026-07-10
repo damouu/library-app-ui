@@ -14,7 +14,7 @@
               :seriesUuid="props.seriesUuid"
               :page="Number(route.query.page || 1) - 1"
               :size="12"
-              sort="publicationDate"
+              sort="publicationDate,desc"
           />
         </div>
       </Transition>
@@ -52,7 +52,7 @@ const props = defineProps<{
 
 const fetchData = async () => {
   const page = route.query.page ? Number(route.query.page) - 1 : 0;
-  await chapterStore.getSeriesChapters(page, 12, "publicationDate", "desc", props.seriesUuid);
+  await chapterStore.getSeriesChapters(page, 12, "publicationDate,desc", props.seriesUuid);
 };
 
 watch(
