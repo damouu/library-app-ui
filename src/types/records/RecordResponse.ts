@@ -1,5 +1,5 @@
-import type {SortDTO} from "@/types/SortDTO";
-import type {PageableDTO} from "@/types/PageableDTO";
+import type {SortDTO} from "@/types/common/SortDTO";
+import type {PageableDTO} from "@/types/common/PageableDTO";
 import type {BorrowDTO} from "@/types/records/BorrowDTO";
 
 export interface RecordResponse {
