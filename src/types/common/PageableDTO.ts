@@ -1,4 +1,4 @@
-import type {SortDTO} from "@/types/SortDTO";
+import type {SortDTO} from "@/types/common/SortDTO";
 
 export interface PageableDTO {
     pageNumber: number;
