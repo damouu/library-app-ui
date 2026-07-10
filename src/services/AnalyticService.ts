@@ -3,7 +3,7 @@ import {mapTopBorrowedChapter} from "@/mappers/TopBorrowedChapterMapper";
 import type {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
 import type {TopBorrowedChapterDTO} from "@/types/analytics/TopBorrowedChapterDTO";
 import type {PeriodKey} from "@/types/analytics/PeriodKey";
-import type {Page} from "@/types/Pagination";
+import type {Page} from "@/types/common/Pagination";
 
 
 export class AnalyticService {
