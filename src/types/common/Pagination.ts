@@ -1,5 +1,5 @@
-import type {SortDTO} from "@/types/SortDTO";
-import type {PageableDTO} from "@/types/PageableDTO";
+import type {SortDTO} from "@/types/common/SortDTO";
+import type {PageableDTO} from "@/types/common/PageableDTO";
 
 export interface Page<T> {
     content: T[];
