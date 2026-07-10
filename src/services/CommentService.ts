@@ -40,7 +40,11 @@ export class CommentService {
                 comment: content
             }
         );
+    }
 
+    static async deleteComment(commentUuid: string): Promise<void> {
+
+        await api.delete(`/api/comment/${commentUuid}`, {});
     }
 
 }
