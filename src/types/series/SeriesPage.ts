@@ -1,6 +1,6 @@
-import type {PageableDTO} from "@/types/PageableDTO";
-import type {SortDTO} from "@/types/SortDTO";
-import {Series} from "@/types/Series";
+import type {PageableDTO} from "@/types/common/PageableDTO";
+import type {SortDTO} from "@/types/common/SortDTO";
+import {Series} from "@/models/Series";
 
 export interface SeriesPage {
     content: Series[];
