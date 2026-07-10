@@ -33,54 +33,35 @@ export const useChapterStore = defineStore('Chapter', () => {
         pageSize: 12
     });
 
-    async function getSeriesChapters(page: number, size: number, sort: string, direction: string, seriesUuid: string): Promise<void> {
+    async function getSeriesChapters(page: number, size: number, sort: string, seriesUuid: string): Promise<void> {
+
         isLoading.value = true;
+
         try {
-            const response = await api.get(`/api/catalogue/public/series/${seriesUuid}/chapters`, {
-                params: {
-                    page: page,
-                    size: size,
-                    sort: sort,
-                    direction: direction
-                }
-            });
 
-            seriesList.value = response.data.content.map((item: any) => new Chapter(
-                item.uuid,
-                item.title,
-                item.secondTitle,
-                item.totalPages,
-                item.chapterNumber,
-                item.coverArtworkUrl,
-                item.summary,
-                item.publicationDate,
-                item.book_uuid,
-                item.series
-            ));
+            const response = await CatalogService.getSeriesChapters({page, size, sort}, seriesUuid);
 
-            pagination.value = {
-                totalPages: response.data.totalPages,
-                totalElements: response.data.totalElements,
-                currentPage: response.data.number,
-                isLast: response.data.last,
-                isFirst: response.data.first,
-                pageSize: response.data.size
-            };
+            seriesList.value = response.content;
 
-        } catch (error) {
-            throw error;
+            pagination.value = mapPagination(response);
+
         } finally {
+
             isLoading.value = false;
         }
     }
 
 
     async function getChapters(chapterUuid: string): Promise<void> {
+
         isLoading.value = true;
 
         try {
+
             currentChapter.value = await CatalogService.getChapter(chapterUuid);
+
         } finally {
+
             isLoading.value = false;
         }
     }
@@ -91,6 +72,7 @@ export const useChapterStore = defineStore('Chapter', () => {
         isLoading.value = true;
 
         try {
+
             const params = {page, size, sort};
 
             const cleanParams = Object.fromEntries(
@@ -102,11 +84,11 @@ export const useChapterStore = defineStore('Chapter', () => {
             const chapterPage = await CatalogService.getChapters(cleanParams);
 
             Chapters.value = chapterPage.content;
+
             pagination.value = mapPagination(chapterPage);
 
-        } catch (error) {
-            throw error;
         } finally {
+
             isLoading.value = false;
         }
     }
@@ -118,12 +100,7 @@ export const useChapterStore = defineStore('Chapter', () => {
 
         try {
 
-            const params = {
-                page,
-                size,
-                sort: direction ? `${sort},${direction}` : sort,
-                ...filters
-            };
+            const params = {page, size, sort: direction ? `${sort},${direction}` : sort, ...filters};
 
             const cleanParams = Object.fromEntries(
                 Object.entries(params).filter(([_, v]) =>
@@ -134,6 +111,7 @@ export const useChapterStore = defineStore('Chapter', () => {
             const chapterPage = await CatalogService.getChapters(cleanParams);
 
             Chapters.value = chapterPage.content;
+
             pagination.value = mapPagination(chapterPage);
 
         } finally {
@@ -156,10 +134,8 @@ export const useChapterStore = defineStore('Chapter', () => {
 
             rankings[period] = chapters.content;
 
-        } catch (error) {
-            console.error(error);
-
         } finally {
+
             isLoading.value = false;
         }
     }
@@ -198,7 +174,6 @@ export const useChapterStore = defineStore('Chapter', () => {
             newChapters.value = collected.slice(0, 3);
 
         } catch (error) {
-            console.error("Gallery fetch failed:", error);
             newChapters.value = [];
         }
     }
