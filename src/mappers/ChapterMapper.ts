@@ -13,6 +13,6 @@ export function mapChapter(dto: ChapterDTO): Chapter {
         dto.coverArtworkUrl,
         dto.summary,
         dto.publicationDate,
-        mapSeries(dto.series)
+        mapSeries(dto.series!)
     );
 }
