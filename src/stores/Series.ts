@@ -5,7 +5,9 @@ import {CatalogService} from "@/services/CatalogService";
 import {mapPagination} from "@/mappers/PaginationMapper";
 
 export const useSeriesStore = defineStore('Series', () => {
+
     const seriesList = ref<Series[]>([]);
+
     const isLoading = ref(false);
 
     const pagination = ref({
@@ -18,6 +20,7 @@ export const useSeriesStore = defineStore('Series', () => {
     });
 
     async function getSeries(page: number, size: number, sort: string, filters = {}): Promise<boolean> {
+
         isLoading.value = true;
 
         try {
@@ -37,6 +40,7 @@ export const useSeriesStore = defineStore('Series', () => {
             return true;
 
         } finally {
+
             isLoading.value = false;
         }
     }
