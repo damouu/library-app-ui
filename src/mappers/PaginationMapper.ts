@@ -1,4 +1,4 @@
-import type {Page} from "@/types/Pagination";
+import type {Page} from "@/types/common/Pagination";
 
 export function mapPagination<T>(page: Page<T>) {
     return {
