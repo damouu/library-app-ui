@@ -23,7 +23,7 @@ export class CommentService {
     static async postComment(chapterUuid: string, content: string): Promise<Comment> {
 
         const response = await api.post<CommentCreatedResponseDTO>(
-            `/api/comment/chapter/${chapterUuid}`,
+            `/comment/chapter/${chapterUuid}`,
             {
                 comment: content
             }
@@ -35,7 +35,7 @@ export class CommentService {
     static async updateComment(uuid: string, content: string): Promise<void> {
 
         await api.put(
-            `/api/comment/${uuid}`,
+            `/comment/${uuid}`,
             {
                 comment: content
             }
@@ -44,7 +44,7 @@ export class CommentService {
 
     static async deleteComment(commentUuid: string): Promise<void> {
 
-        await api.delete(`/api/comment/${commentUuid}`, {});
+        await api.delete(`/comment/${commentUuid}`, {});
     }
 
 }
