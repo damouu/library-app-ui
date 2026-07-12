@@ -11,7 +11,7 @@ export class BorrowService {
         const payload = mapBorrowRequest(selections);
 
         const response = await api.post<BorrowResponseDTO>(
-            "/api/borrow/books",
+            "/borrow/books",
             payload
         );
 
@@ -21,7 +21,7 @@ export class BorrowService {
     static async return(borrowUuid: string): Promise<ReturnBorrowResponseDTO> {
 
         const response = await api.post<ReturnBorrowResponseDTO>(
-            `/api/borrow/${borrowUuid}/return`
+            `/borrow/${borrowUuid}/return`
         );
 
         return response.data;
