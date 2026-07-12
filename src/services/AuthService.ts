@@ -9,7 +9,7 @@ export class AuthService {
 
         const base64Credentials = window.btoa(`${email}:${password}`);
 
-        const response = await api.post("/api/auth/login", {}, {
+        const response = await api.post("/auth/login", {}, {
             headers: {
                 Authorization: `Basic ${base64Credentials}`
             }
@@ -25,7 +25,7 @@ export class AuthService {
 
     static async signUp(user_name: string, email: string, password: string, password_confirmation: string) {
 
-        const response = await api.post(`/api/auth/register`, {
+        const response = await api.post(`/auth/register`, {
             user_name, email, password, password_confirmation
         }, {});
 
