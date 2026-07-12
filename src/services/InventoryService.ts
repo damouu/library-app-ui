@@ -8,7 +8,7 @@ export class InventoryService {
     static async checkAvailability(chapterUuid: string): Promise<Inventory> {
 
         const response = await api.get<InventoryDTO>(
-            `/api/inventory/public/${chapterUuid}`
+            `/inventory/public/${chapterUuid}`
         );
 
         return mapInventory(response.data);
