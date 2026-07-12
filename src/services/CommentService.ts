@@ -11,7 +11,7 @@ export class CommentService {
     static async getChapter(page: number, size: number, chapterUuid: string): Promise<CommentPage> {
 
         const response = await api.get<CommentPageResponseDTO>(
-            `/api/comment/public/chapter/${chapterUuid}`,
+            `/comment/public/chapter/${chapterUuid}`,
             {
                 params: {page, size}
             }
