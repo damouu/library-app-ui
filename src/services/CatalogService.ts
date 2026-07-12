@@ -15,7 +15,7 @@ export class CatalogService {
     static async getChapters(params: Record<string, unknown>): Promise<ChapterPage> {
 
         const response = await api.get<ChapterPageDTO>(
-            "/api/catalogue/public/chapters",
+            "/catalogue/public/chapters",
             {params}
         );
 
@@ -24,7 +24,7 @@ export class CatalogService {
 
     static async getChapter(chapterUuid: string): Promise<Chapter> {
         const response = await api.get<ChapterDTO>(
-            `/api/catalogue/public/chapters/${chapterUuid}`
+            `/catalogue/public/chapters/${chapterUuid}`
         );
 
         return mapChapter(response.data);
@@ -33,7 +33,7 @@ export class CatalogService {
     static async getSeries(params: { [k: string]: string | number; }): Promise<Page<Series>> {
 
         const response = await api.get<SeriesPageDTO>(
-            `/api/catalogue/public/series/`,
+            `/catalogue/public/series/`,
             {params: params}
         );
 
@@ -43,7 +43,7 @@ export class CatalogService {
     static async getSeriesChapters(params: Record<string, string | number>, seriesUuid: string): Promise<Page<Chapter>> {
 
         const response = await api.get<ChapterPageDTO>(
-            `/api/catalogue/public/series/${seriesUuid}/chapters`,
+            `/catalogue/public/series/${seriesUuid}/chapters`,
             {
                 params
             }
