@@ -11,7 +11,7 @@ export class AnalyticService {
     static async getTop(period: PeriodKey, page: number, size: number,): Promise<Page<TopBorrowedChapter>> {
 
         const response = await api.get<Page<TopBorrowedChapterDTO>>(
-            "/api/analytics/public/top-chapters",
+            "/analytics/public/top-chapters",
             {
                 params: {period, page, size}
             }
