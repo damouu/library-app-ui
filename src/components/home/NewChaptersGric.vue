@@ -13,14 +13,14 @@
       >
         <router-link
             :to="{ name: 'chapter-details', params: { chapterUuid: chapter.uuid }}"
-            class="text-decoration-none text-reset"
+            class="text-decoration-none text-reset text-center"
         >
           <div class="card h-100 shadow-sm border-2">
             <div class="img-container">
               <img :src="chapter.coverArtworkUrl" class="card-img-top custom-card-img" alt="Cover">
             </div>
             <div class="card-body p-2 text-center">
-              <h6 class="card-title text-primary mb-1 text-truncate">
+              <h6 class="card-title text-primary mb-1 text-truncate text-center">
                 {{ chapter.title }}
               </h6>
               <p class="card-text mb-0 text-body-secondary text-muted">
