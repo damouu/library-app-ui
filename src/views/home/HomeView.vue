@@ -48,7 +48,7 @@ const displayedBooks = computed(() => {
 });
 
 onMounted(() => {
-  chapterStore.getTop("CURRENT_WEEK", 0, 5);
+  chapterStore.getTop("CURRENT_WEEK", 0, 6);
   chapterStore.getNews(0, 12, "publicationDate,desc")
 })
 
