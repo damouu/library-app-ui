@@ -4,15 +4,15 @@
     <h2 class="mt-2">貸出完了！</h2>
 
     <div class="mt-3 p-3 bg-light rounded">
-      <h5><strong>注文番号:</strong> {{ cartStore.lastTransaction.borrow_UUID }}</h5>
+      <h5><strong>注文番号:</strong> {{ cartStore.lastTransaction.borrow_uuid }}</h5>
       <div class="row justify-content-center mt-4">
         <div class="col-12 col-md-8">
           <div class="d-flex justify-content-center gap-4 text-center">
             <div>
-              <h5><strong>貸出日:</strong> {{ cartStore.lastTransaction.start_borrow_date }} </h5>
+              <h5><strong>貸出日:</strong> {{ cartStore.lastTransaction.borrowStartDate }} </h5>
             </div>
             <div class="text-danger">
-              <h5><strong>返却期限:</strong> {{ cartStore.lastTransaction.end_borrow_date }} </h5>
+              <h5><strong>返却期限:</strong> {{ cartStore.lastTransaction.borrowEndDate }} </h5>
             </div>
           </div>
         </div>
