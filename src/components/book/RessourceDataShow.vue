@@ -166,10 +166,9 @@ const fullLoad = async (uuid: string) => {
   await chapterStore.getChapters(uuid);
 
   if (chapterStore.currentChapter) {
-    await chapterStore.getNextThreeChapters(
-        chapterStore.currentChapter.chapterNumber,
-        chapterStore.currentChapter.series.uuid
-    );
+
+    await chapterStore.getNextThreeChapters(chapterStore.currentChapter.series.uuid, chapterStore.currentChapter.uuid);
+
   }
 };
 

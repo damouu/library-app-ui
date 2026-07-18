@@ -40,7 +40,7 @@ async function handlePeriodChange(newPeriod: PeriodKey) {
 
 async function handlePageChange(newPage: number) {
   newReleaseGrid.value?.scrollToTop();
-  await chapterStore.getNews(newPage, 12, 'publicationDate,asc');
+  await chapterStore.getNews(newPage, 12, 'publicationDate,desc');
 }
 
 const displayedBooks = computed(() => {
@@ -49,7 +49,7 @@ const displayedBooks = computed(() => {
 
 onMounted(() => {
   chapterStore.getTop("CURRENT_WEEK", 0, 5);
-  chapterStore.getNews(0, 12, "publicationDate,asc")
+  chapterStore.getNews(0, 12, "publicationDate,desc")
 })
 
 </script>

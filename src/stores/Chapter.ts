@@ -1,7 +1,6 @@
 import {reactive, ref} from "vue";
 import {defineStore} from "pinia";
 import {Chapter} from "@/models/Chapter"
-import {api} from '@/plugins/gateway';
 import {AnalyticService} from "@/services/AnalyticService";
 import type {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
 import type {PeriodKey} from "@/types/analytics/PeriodKey";
@@ -140,40 +139,14 @@ export const useChapterStore = defineStore('Chapter', () => {
         }
     }
 
-    async function getNextThreeChapters(currentChapterNumber: number, seriesUuid: string) {
-        const size = 3;
-        const collected: Chapter[] = [];
-
-
-        let apiPage = Math.ceil(currentChapterNumber / size) - 1;
-
-        if (apiPage < 0) apiPage = 0;
+    async function getNextThreeChapters(seriesUuid: string, chapterUuid: string) {
 
         try {
-            const response = await api.get(`/api/catalogue/public/series/${seriesUuid}/chapters`, {
-                params: {page: apiPage, size: size}
-            });
 
-            const chapters = response.data.content;
+            newChapters.value = await CatalogService.getNextChapters(seriesUuid, chapterUuid);
 
-            const followers = chapters.filter((c: {
-                chapterNumber: number;
-            }) => c.chapterNumber > currentChapterNumber);
-            collected.push(...followers);
+        } catch {
 
-
-            if (collected.length < 3) {
-                const nextRes = await api.get(`/api/catalogue/public/series/${seriesUuid}/chapters`, {
-                    params: {page: apiPage + 1, size: size}
-                });
-                if (nextRes.data?.content) {
-                    collected.push(...nextRes.data.content);
-                }
-            }
-
-            newChapters.value = collected.slice(0, 3);
-
-        } catch (error) {
             newChapters.value = [];
         }
     }

@@ -51,4 +51,17 @@ export class CatalogService {
 
         return mapChapterPage(response.data);
     }
+
+
+    static async getNextChapters(seriesUuid: string, chapterUuid: string, size: number = 3): Promise<Chapter[]> {
+
+        const response = await api.get<ChapterDTO[]>(
+            `/catalogue/public/series/${seriesUuid}/chapters/${chapterUuid}/next`,
+            {
+                params: {size}
+            }
+        );
+
+        return response.data.map(mapChapter);
+    }
 }
