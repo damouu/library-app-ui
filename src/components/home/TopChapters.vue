@@ -7,12 +7,12 @@
     >
       <div
           v-for="(item, index) in props.displayedBooks"
-            :key="item.chapterUuid"
+          :key="item.chapterUuid"
           class="col-6 col-sm-4 col-md-3 col-lg-2 mt-4 ranking-item"
       >
         <router-link
             :to="{ name: 'chapter-details', params: { chapterUuid: item.chapterUuid }}"
-            class="text-decoration-none text-reset"
+            class="text-decoration-none text-reset text-center"
         >
           <div class="card h-100 border-0 shadow-sm ranking-card">
             <div :class="['rank-badge', getRankClass(index + 1)]">
@@ -24,8 +24,8 @@
             </div>
 
             <div class="card-body p-2">
-              <h6 class="card-title text-dark fw-bold text-truncate mb-1">{{ item.title }}</h6>
-              <p class="small text-muted mb-0">巻 {{ item.chapterNumber }}</p>
+              <h4 class="card-title text-dark fw-bold text-truncate mb-1 text-center">{{ item.title }}</h4>
+              <h5 class="small text-muted mb-0">巻 {{ item.chapterNumber }}</h5>
             </div>
 
             <div class="card-footer border-0 bg-transparent pb-3 pt-0">
