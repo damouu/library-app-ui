@@ -58,34 +58,25 @@
       <Transition name="fade-classic" mode="out-in">
 
         <div v-if="seriesStore.isLoading" key="loading" class="row g-4">
-
           <div
-              v-for="i in 6"
+              v-for="i in 12"
               :key="i"
-              class="col-12 col-md-6 col-xl-4"
+              class="col-6 col-sm-4 col-md-3 col-lg-2 mt-4"
           >
             <div class="card h-100 shadow-sm border-2 placeholder-glow overflow-hidden">
 
-              <div
-                  class="placeholder w-100"
-                  style="height:320px;">
-              </div>
+              <div class="placeholder card-img-top" style="height: 200px;"></div>
 
               <div class="card-body text-center">
+                <div class="placeholder col-10 mb-2"></div>
 
-                <div class="placeholder col-9 mx-auto mb-3"></div>
-
-                <div class="placeholder col-6 mx-auto mb-2"></div>
-
-                <div class="placeholder col-5 mx-auto mb-2"></div>
-
-                <div class="placeholder col-7 mx-auto"></div>
-
+                <div class="placeholder col-6 mb-1"></div>
+                <div class="placeholder col-5 mb-1"></div>
+                <div class="placeholder col-8"></div>
               </div>
 
             </div>
           </div>
-
         </div>
 
         <div v-else key="grid-content">
