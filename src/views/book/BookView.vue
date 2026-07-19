@@ -15,13 +15,21 @@
                 <p class="x-small mb-0 mt-1">新しい本を借りる前に、返却手続きを完了してください。</p>
               </div>
 
+              <div v-else-if="userStore.hasBorrowedOrReturnedToday"
+                   class="p-3 rounded-4 border bg-info-subtle text-info-emphasis shadow-sm">
+                <i class="bi bi-calendar-check me-2"></i>
+                <strong>本日の操作制限</strong>
+                <p class="x-small mb-0 mt-1">
+                  本日はすでにお借入・ご返却をいただいています。1日1回までとなっております。</p>
+              </div>
+
               <div v-else-if="inventoryStore.currentChapter">
                 <div v-if="cartStore.items.some(item => item.chapter.uuid === props.chapterUuid)">
                   <h4 class="text-primary h6 fw-bold">
                     カートに入りました <i class="bi bi-check-circle-fill ms-1"/>
                   </h4>
                 </div>
-                
+
                 <div v-else>
                   <CopiesAvailable/>
                 </div>
