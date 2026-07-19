@@ -150,7 +150,7 @@ onMounted(async () => {
 });
 
 
-async function fetchSeriesData(size: number | null) {
+async function fetchSeriesData(size: number | null = 12) {
   const pageFromUrl = route.query.page ? Number(route.query.page) : 1;
   const apiPage = pageFromUrl - 1;
 
