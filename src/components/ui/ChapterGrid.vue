@@ -20,7 +20,7 @@
         >
 
           <div class="card h-100">
-            <img :src="chapter.coverArtworkUrl" class="card-img-top" alt="Cover">
+            <img :src="chapter.coverArtworkUrl" class="card-img-top custom-card-img">
             <div class="card-body">
               <h5 class="card-title text-primary">{{ chapter.title }} </h5>
               <p class="card-text mb-1 small"> {{ chapter.secondTitle }}</p>
