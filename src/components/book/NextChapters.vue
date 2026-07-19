@@ -1,13 +1,3 @@
-<script lang="ts" setup>
-import {useChapterStore} from "@/stores/Chapter";
-import {storeToRefs} from "pinia";
-
-const chapterStore = useChapterStore();
-
-
-const {newChapters, loadingNext} = storeToRefs(chapterStore);
-</script>
-
 <template>
   <div class="mt-5 pt-4 border-top">
     <div class="d-flex align-items-center mb-4">
@@ -22,12 +12,23 @@ const {newChapters, loadingNext} = storeToRefs(chapterStore);
 
     <div v-if="loadingNext" class="row g-3">
       <div v-for="i in 3" :key="i" class="col-12 col-xl-4">
-        <div class="card border-0 shadow-sm placeholder-glow overflow-hidden">
+        <div class="card border-0 shadow-sm h-100 placeholder-glow">
+
           <div class="row g-0">
-            <div class="col-4 bg-light placeholder" style="min-height: 140px;"></div>
-            <div class="col-8 card-body">
-              <span class="placeholder col-8 mb-2"></span>
-              <span class="placeholder col-4 small"></span>
+            <div class="col-4">
+              <div
+                  class="placeholder w-100 h-100 rounded-start"
+                  style="min-height: 160px;">
+              </div>
+            </div>
+
+            <div class="col-8">
+              <div class="card-body py-2 px-3">
+                <span class="placeholder col-9 d-block mb-3"></span>
+                <span class="placeholder col-5 d-block mb-2"></span>
+                <span class="placeholder col-7 d-block mb-3"></span>
+                <span class="placeholder col-4 d-block"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -35,6 +36,7 @@ const {newChapters, loadingNext} = storeToRefs(chapterStore);
     </div>
 
     <div v-else-if="newChapters && newChapters.length > 0" class="row g-3">
+
       <div v-for="next in newChapters" :key="next.uuid" class="col-12 col-xl-4">
         <router-link
             :to="{ name: 'chapter-details', params: { chapterUuid: next.uuid } }"
@@ -42,6 +44,7 @@ const {newChapters, loadingNext} = storeToRefs(chapterStore);
         >
           <div class="card border-0 shadow-sm h-100 next-book-card overflow-hidden">
             <div class="row g-0 h-100">
+
               <div class="col-4 position-relative">
                 <img
                     :src="next.coverArtworkUrl || '/placeholder-cover.jpg'"
@@ -84,3 +87,14 @@ const {newChapters, loadingNext} = storeToRefs(chapterStore);
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+
+import {useChapterStore} from "@/stores/Chapter";
+import {storeToRefs} from "pinia";
+
+const chapterStore = useChapterStore();
+
+const {newChapters, loadingNext} = storeToRefs(chapterStore);
+
+</script>
