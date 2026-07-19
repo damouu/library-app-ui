@@ -1,24 +1,46 @@
 <template>
+
   <div class="container py-5">
-    <div class="content-wrapper">
-      <Transition name="fade-slide" mode="out-in">
-        <div v-if="chapterStore.isLoading" key="loading" class="loader-container">
-          <div class="d-flex justify-content-center align-items-center">
-            <div class="spinner-border text-primary" role="status"></div>
+
+    <Transition name="fade-slide" mode="out-in">
+
+      <div v-if="chapterStore.isLoading" key="loading" class="row g-4">
+
+        <div v-for="i in 12" :key="i" class="col-6 col-sm-4 col-md-3 col-lg-2">
+
+          <div class="card h-100 shadow-sm border-2 placeholder-glow overflow-hidden">
+
+            <div
+                class="placeholder w-100"
+                style="height:260px;">
+            </div>
+
+            <div class="card-body text-center">
+
+              <div class="placeholder col-10 mx-auto mb-2"></div>
+
+              <div class="placeholder col-7 mx-auto mb-2"></div>
+
+              <div class="placeholder col-5 mx-auto"></div>
+
+            </div>
+
           </div>
+
         </div>
 
-        <div v-else key="content">
-          <ChapterGrid
-              :key="chapterStore.pagination?.currentPage"
-              :seriesUuid="props.seriesUuid"
-              :page="Number(route.query.page || 1) - 1"
-              :size="12"
-              sort="publicationDate,desc"
-          />
-        </div>
-      </Transition>
-    </div>
+      </div>
+
+      <div v-else key="content">
+        <ChapterGrid
+            :key="chapterStore.pagination?.currentPage"
+            :seriesUuid="props.seriesUuid"
+            :page="Number(route.query.page || 1) - 1"
+            :size="12"
+            sort="publicationDate,desc"
+        />
+      </div>
+    </Transition>
 
     <div class="pagination-wrapper mt-5 pt-4 border-top">
       <Pagination
@@ -67,11 +89,16 @@ async function handlePageChange(newPage: number) {
   await router.push({query: {...route.query, page: newPage + 1}});
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (!route.query.page) {
-    router.replace({query: {...route.query, page: 1}});
+    await router.replace({
+      query: {
+        ...route.query,
+        page: 1
+      }
+    });
   }
-  fetchData();
+  await fetchData();
 });
 
 </script>
