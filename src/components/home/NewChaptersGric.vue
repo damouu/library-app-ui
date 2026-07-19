@@ -5,14 +5,27 @@
       <h2><i class="bi bi-fire"> 最新リリース</i></h2>
     </div>
 
-    <div
-        v-if="chapterStore.newsLoading"
-        class="d-flex justify-content-center align-items-center"
-        style="min-height: 450px;"
-    >
-      <div class="text-center">
-        <div class="spinner-border text-warning" role="status"></div>
-        <p class="mt-3 mb-0">読み込み中...</p>
+    <div v-if="chapterStore.newsLoading" class="row gy-5">
+      
+      <div v-for="i in 12" :key="i" class="col-6 col-sm-4 col-md-3 col-lg-2">
+
+        <div class="card h-100 shadow-sm border-2 placeholder-glow">
+
+          <div class="img-container">
+            <div class="placeholder w-100 custom-card-img"></div>
+          </div>
+
+          <div class="card-body p-2 text-center">
+
+            <span class="placeholder col-10 d-block mx-auto mb-2"></span>
+
+            <span class="placeholder col-5 d-block mx-auto mb-2"></span>
+
+            <span class="placeholder col-7 d-block mx-auto"></span>
+
+          </div>
+
+        </div>
       </div>
     </div>
 
