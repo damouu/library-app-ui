@@ -17,6 +17,7 @@
 
 
           <div class="filter-chips-wrapper flex-grow-1 d-flex justify-content-center px-4">
+
             <div class="d-flex flex-wrap gap-2 align-items-center">
 
               <TransitionGroup name="fade-classic">
@@ -61,9 +62,31 @@
     <div class="content-wrapper position-relative ">
       <Transition name="fade-classic" mode="out-in">
 
-        <div v-if="chapterStore.isLoading" key="loading" class="loader-box">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+        <div v-if="chapterStore.isLoading" key="loading" class="row gy-5">
+
+          <div v-for="i in 12" :key="i" class="col-6 col-sm-4 col-md-3 col-lg-2">
+
+            <div class="card h-100 shadow-sm border-2 placeholder-glow overflow-hidden">
+
+              <div
+                  class="placeholder w-100"
+                  style="height:260px;">
+              </div>
+
+              <div class="card-body">
+
+                <div class="placeholder col-10 mb-3"></div>
+
+                <div class="placeholder col-8 mb-2"></div>
+
+                <div class="placeholder col-5 mb-2"></div>
+
+                <div class="placeholder col-6"></div>
+
+              </div>
+
+            </div>
+
           </div>
         </div>
 
