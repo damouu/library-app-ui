@@ -3,16 +3,62 @@
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-9">
 
+
         <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
           <h5 class="fw-bold text-dark mb-0">
             <i class="bi bi-chat-right-dots-fill text-primary me-2"></i>
-            コメント <span class="badge bg-light text-primary ms-2 shadow-sm border">{{
-              commentStore.commentsList?.length || 0
-            }}</span>
+            コメント
+            <span v-if="!commentStore.commentsLoading" class="badge bg-light text-primary ms-2 shadow-sm border">{{
+                commentStore.commentsList?.length || 0
+              }}</span>
           </h5>
         </div>
 
-        <div v-if="commentStore.commentsList && commentStore.commentsList.length > 0">
+        <div v-if="commentStore.commentsLoading">
+          <div
+              v-for="i in 3"
+              :key="i"
+              class="comment-item mb-4"
+          >
+            <div class="d-flex align-items-start">
+
+              <div class="me-3">
+                <div
+                    class="placeholder rounded-circle"
+                    style="width: 52px; height: 52px;">
+                </div>
+              </div>
+
+              <div class="flex-grow-1">
+
+                <div class="placeholder-glow mb-3">
+                  <span class="placeholder col-3 d-inline-block me-2"></span>
+                  <span class="placeholder col-2 d-inline-block"></span>
+                </div>
+
+                <div class="content-bubble p-3 rounded-4 shadow-sm mb-2">
+
+                  <p class="placeholder-glow mb-2">
+                    <span class="placeholder col-12"></span>
+                  </p>
+
+                  <p class="placeholder-glow mb-2">
+                    <span class="placeholder col-10"></span>
+                  </p>
+
+                  <p class="placeholder-glow mb-0">
+                    <span class="placeholder col-7"></span>
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div v-else-if="commentStore.commentsList && commentStore.commentsList.length > 0">
           <div
               v-for="comment in commentStore.commentsList"
               :key="comment.commentUuid"
@@ -161,15 +207,6 @@ watch(() => props.chapterUuid, async (newUuid) => {
     commentStore.commentsList = null;
     await loadComments();
   }
-});
-
-
-onMounted(async () => {
-  await commentStore.getChapter(
-      props.page,
-      props.size,
-      props.chapterUuid,
-  );
 });
 
 onUnmounted(() => {
