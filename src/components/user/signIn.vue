@@ -22,9 +22,16 @@
       </div>
 
       <button :disabled="userStore.isLoading" type="submit" class="btn btn-primary w-50 offset-3 mt-3">
-        <span v-if="userStore.isLoading" class="spinner-border spinner-border-sm"></span>
-        <span v-else>ログイン</span>
+
+        <template v-if="userStore.isLoading">
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          ログイン中...
+        </template>
+
+        <template v-else>ログイン</template>
+
       </button>
+
     </form>
   </div>
 </template>
