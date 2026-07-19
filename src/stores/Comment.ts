@@ -9,6 +9,8 @@ export const useCommentStore = defineStore('Comment', () => {
 
     const isLoading = ref(false);
 
+    const commentsLoading = ref(false);
+
     const pagination = ref({
         totalPages: 0,
         currentPage: 0,
@@ -20,7 +22,7 @@ export const useCommentStore = defineStore('Comment', () => {
 
     async function getChapter(page: number, size: number, chapterUuid: string): Promise<void> {
 
-        isLoading.value = true;
+        commentsLoading.value = true;
 
         try {
 
@@ -32,7 +34,7 @@ export const useCommentStore = defineStore('Comment', () => {
 
         } finally {
 
-            isLoading.value = false;
+            commentsLoading.value = false;
         }
     }
 
@@ -92,5 +94,5 @@ export const useCommentStore = defineStore('Comment', () => {
         }
     }
 
-    return {commentsList, isLoading, getChapter, pagination, postComment, deleteComment, updateComment};
+    return {commentsList, isLoading, getChapter, pagination, postComment, deleteComment, updateComment, commentsLoading};
 });
