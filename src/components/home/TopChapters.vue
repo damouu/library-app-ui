@@ -1,17 +1,32 @@
 <template>
   <div class="container-fluid mt-3">
 
-    <div
-        v-if="chapterStore.rankingLoading"
-        class="d-flex justify-content-center align-items-center"
-        style="min-height: 350px;"
-    >
-      <div class="text-center">
-        <div class="spinner-border text-warning" role="status"></div>
-        <p class="mt-3 mb-0">ランキングを読み込み中...</p>
+    <div v-if="chapterStore.rankingLoading" class="row g-4 text-center mt-2 mb-2">
+      <div
+          v-for="i in 6"
+          :key="i"
+          class="col-6 col-sm-4 col-md-3 col-lg-2 mt-4"
+      >
+        <div class="card h-100 border-0 shadow-sm ranking-card placeholder-glow">
+
+          <div class="rank-badge rank-standard placeholder"></div>
+
+          <div class="image-container overflow-hidden rounded-top">
+            <div class="placeholder w-100 ranking-img"></div>
+          </div>
+
+          <div class="card-body p-2">
+            <span class="placeholder col-10 d-block mx-auto mb-2"></span>
+            <span class="placeholder col-5 d-block mx-auto"></span>
+          </div>
+
+          <div class="card-footer border-0 bg-transparent pb-3 pt-0">
+            <span class="placeholder col-4 d-block mx-auto"></span>
+          </div>
+
+        </div>
       </div>
     </div>
-
 
     <TransitionGroup
         v-else
