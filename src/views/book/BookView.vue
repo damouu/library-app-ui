@@ -8,7 +8,6 @@
           <div v-else>
             <div v-if="userStore.isAuthenticated">
 
-
               <div v-if="userStore.hasUnreturnedBorrows"
                    class="unreturned-warning p-3 rounded-4 border bg-warning-subtle text-warning-emphasis shadow-sm">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -22,6 +21,7 @@
                     カートに入りました <i class="bi bi-check-circle-fill ms-1"/>
                   </h4>
                 </div>
+                
                 <div v-else>
                   <CopiesAvailable/>
                 </div>
