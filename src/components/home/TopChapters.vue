@@ -52,8 +52,8 @@
               <img :src="item.coverArtworkUrl" class="card-img-top ranking-img" alt="Cover">
             </div>
 
-            <div class="card-body p-2 text-center">
-              <h4 class="card-title text-dark fw-bold text-truncate mb-1 text-center">{{ item.title }}</h4>
+            <div class="card-body p-2 d-flex flex-column align-items-center">
+              <h4 class="card-title text-dark fw-bold text-truncate w-100 mb-1">{{ item.title }}</h4>
               <h4 class="small text-muted mb-0">巻 {{ item.chapterNumber }}</h4>
             </div>
 
