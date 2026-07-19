@@ -19,13 +19,15 @@ export const useSeriesStore = defineStore('Series', () => {
         pageSize: 12
     });
 
-    async function getSeries(page: number, size: number, sort: string, filters = {}): Promise<boolean> {
+    async function getSeries(page: number, size: number | null, sort: string, filters = {}): Promise<boolean> {
 
         isLoading.value = true;
 
+        const pageSize = size ?? 12;
+
         try {
 
-            const params = {page, size, sort, ...filters};
+            const params = {page, size: pageSize, sort, ...filters};
 
             const cleanParams = Object.fromEntries(
                 Object.entries(params).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
