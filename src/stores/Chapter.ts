@@ -23,6 +23,10 @@ export const useChapterStore = defineStore('Chapter', () => {
 
     const isLoading = ref(false);
 
+    const newsLoading = ref(false);
+    const rankingLoading = ref(false);
+    const loadingNext = ref(false);
+
     const pagination = ref({
         totalPages: 0,
         totalElements: 0,
@@ -68,17 +72,13 @@ export const useChapterStore = defineStore('Chapter', () => {
 
     async function getNews(page: number, size: number, sort: string): Promise<void> {
 
-        isLoading.value = true;
+        newsLoading.value = true;
 
         try {
 
             const params = {page, size, sort};
 
-            const cleanParams = Object.fromEntries(
-                Object.entries(params).filter(([_, v]) =>
-                    v !== "" && v !== null && v !== undefined
-                )
-            );
+            const cleanParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v !== "" && v !== null && v !== undefined));
 
             const chapterPage = await CatalogService.getChapters(cleanParams);
 
@@ -88,7 +88,7 @@ export const useChapterStore = defineStore('Chapter', () => {
 
         } finally {
 
-            isLoading.value = false;
+            newsLoading.value = false;
         }
     }
 
@@ -121,7 +121,7 @@ export const useChapterStore = defineStore('Chapter', () => {
 
     async function getTop(period: PeriodKey, page: number, size: number): Promise<void> {
 
-        isLoading.value = true;
+        rankingLoading.value = true;
 
         if (rankings[period]?.length) {
             return;
@@ -135,17 +135,21 @@ export const useChapterStore = defineStore('Chapter', () => {
 
         } finally {
 
-            isLoading.value = false;
+            rankingLoading.value = false;
+
         }
     }
 
     async function getNextThreeChapters(seriesUuid: string, chapterUuid: string) {
 
         try {
+            loadingNext.value = true;
 
             newChapters.value = await CatalogService.getNextChapters(seriesUuid, chapterUuid);
 
         } catch {
+
+            loadingNext.value = false;
 
             newChapters.value = [];
         }
@@ -162,7 +166,10 @@ export const useChapterStore = defineStore('Chapter', () => {
         currentChapter,
         getTop,
         rankings,
+        loadingNext,
         newChapters,
+        newsLoading,
+        rankingLoading,
         getChapter,
         Chapters,
         getNews
