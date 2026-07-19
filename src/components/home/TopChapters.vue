@@ -1,6 +1,20 @@
 <template>
   <div class="container-fluid mt-3">
+
+    <div
+        v-if="chapterStore.rankingLoading"
+        class="d-flex justify-content-center align-items-center"
+        style="min-height: 350px;"
+    >
+      <div class="text-center">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mt-3 mb-0">ランキングを読み込み中...</p>
+      </div>
+    </div>
+
+
     <TransitionGroup
+        v-else
         name="fade-slide"
         tag="div"
         class="row g-4 text-center mt-2 mb-2 position-relative"
@@ -43,6 +57,9 @@
 
 <script setup lang="ts">
 import {TopBorrowedChapter} from "@/types/chapter/TopBorrowedChapter";
+import {useChapterStore} from "@/stores/Chapter";
+
+const chapterStore = useChapterStore();
 
 const props = defineProps<{
   displayedBooks: TopBorrowedChapter[];
