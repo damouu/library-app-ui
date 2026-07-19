@@ -5,12 +5,21 @@
       <h2><i class="bi bi-fire"> 最新リリース</i></h2>
     </div>
 
-    <TransitionGroup name="fade-classic" tag="div" class="row gy-5">
-      <div
-          v-for="chapter in chapterStore.Chapters"
-          :key="chapter.uuid"
-          class="col-6 col-sm-4 col-md-3 col-lg-2"
-      >
+    <div
+        v-if="chapterStore.newsLoading"
+        class="d-flex justify-content-center align-items-center"
+        style="min-height: 450px;"
+    >
+      <div class="text-center">
+        <div class="spinner-border text-warning" role="status"></div>
+        <p class="mt-3 mb-0">読み込み中...</p>
+      </div>
+    </div>
+
+    <TransitionGroup v-else name="fade-classic" tag="div" class="row gy-5">
+
+      <div v-for="chapter in chapterStore.Chapters" :key="chapter.uuid" class="col-6 col-sm-4 col-md-3 col-lg-2">
+
         <router-link
             :to="{ name: 'chapter-details', params: { chapterUuid: chapter.uuid }}"
             class="text-decoration-none text-reset text-center"
