@@ -34,6 +34,22 @@ export const useUserStore = defineStore('user', () => {
     });
 
 
+    const hasBorrowedOrReturnedToday = computed(() => {
+
+        if (!borrowHistory.value || !borrowHistory.value.content) return false;
+
+        const today = new Date().toISOString().split('T')[0];
+
+        return borrowHistory.value.content.some(borrow => {
+            const isBorrowedToday = borrow.borrowStartDate.startsWith(today);
+
+            const isReturnedToday = borrow.borrowReturnDate && borrow.borrowReturnDate.startsWith(today);
+
+            return isBorrowedToday || isReturnedToday;
+        });
+    });
+
+
     function logout() {
         clearAuthentication();
     }
@@ -182,6 +198,7 @@ export const useUserStore = defineStore('user', () => {
         borrowHistory,
         hasUnreturnedBorrows,
         recordsLoading,
+        hasBorrowedOrReturnedToday,
         validationErrors,
         register
     };
