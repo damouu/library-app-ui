@@ -121,11 +121,11 @@ export const useChapterStore = defineStore('Chapter', () => {
 
     async function getTop(period: PeriodKey, page: number, size: number): Promise<void> {
 
-        rankingLoading.value = true;
-
         if (rankings[period]?.length) {
             return;
         }
+
+        rankingLoading.value = true;
 
         try {
 
@@ -143,15 +143,18 @@ export const useChapterStore = defineStore('Chapter', () => {
     async function getNextThreeChapters(seriesUuid: string, chapterUuid: string) {
 
         try {
+
             loadingNext.value = true;
 
             newChapters.value = await CatalogService.getNextChapters(seriesUuid, chapterUuid);
 
         } catch {
 
-            loadingNext.value = false;
-
             newChapters.value = [];
+
+        } finally {
+
+            loadingNext.value = false;
         }
     }
 
