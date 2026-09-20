@@ -12,7 +12,7 @@ export class Chapter {
     private _chapterNumber: number | null;
     private _series: Series | null;
 
-    constructor(uuid: string, title: string, secondTitle: string, totalPages: number | null, chapterNumber: number, coverArtworkUrl: string, summary: string | null, publicationDate: string | null, series: Series | null) {
+    constructor(uuid: string, title: string, secondTitle: string, totalPages: number | null, chapterNumber: number | null, coverArtworkUrl: string, summary: string | null, publicationDate: string | null, series: Series | null) {
         this._uuid = uuid;
         this._title = title;
         this._secondTitle = secondTitle;
