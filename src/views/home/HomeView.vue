@@ -1,5 +1,6 @@
 <template>
-  <main class="mt-4">
+  <main >
+    <HeroBanner/>
     <top-chapters-button @period="handlePeriodChange"/>
     <TopChapters :displayedBooks="displayedBooks"/>
 
@@ -20,6 +21,7 @@
 
 <script setup lang="ts">
 import {useChapterStore} from "@/stores/Chapter";
+import HeroBanner from "@/components/home/HeroBanner.vue";
 import {computed, onMounted, ref} from "vue";
 import TopChapters from "@/components/home/TopChapters.vue";
 import TopChaptersButton from "@/components/home/TopChaptersButton.vue";
