@@ -32,85 +32,34 @@
               ref="searchContainer"
               class="nav-item mx-4 position-relative"
           >
+
             <DiscoveryBar
+                v-model="currentSearchQuery"
                 :is-open="isSearchDropdownVisible"
+
                 @search="handleSearch"
+                @submit="handleSearchSubmit"
+
+                @navigate="handleSearchNavigate"
+                @escape="handleSearchEscape"
+
                 @clear="handleSearchClear"
                 @focus="handleSearchFocus"
             />
 
-
             <Transition name="search-menu">
-              <div
+              <SearchResultsDropdown
                   v-if="isSearchDropdownVisible"
-                  class="search-results-dropdown d-flex flex-column"
-              >
-                <div v-if="searchStore.isLoading"
-                     class="d-flex justify-content-center align-items-center py-5 text-primary">
-                  <div class="spinner-border" role="status" style="width: 2rem; height: 2rem;">
-                    <span class="visually-hidden">書き込み中</span>
-                  </div>
-                </div>
-
-
-                <div v-else-if="searchStore.results.length === 0"
-                     class="d-flex flex-column align-items-center justify-content-center py-5 text-muted">
-                  <i class="bi bi-search text-secondary opacity-50 mb-3" style="font-size: 2.5rem;"></i>
-                  <h6 class="fw-semibold text-dark">検索結果が見つかりませんでした</h6>
-                  <p class="small mb-0">別のキーワードでお試しください。</p>
-                </div>
-
-                <template v-else>
-                  <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
-                    <span class="text-secondary small fw-bold">章の検索結果</span>
-
-                    <RouterLink
-                        :to="`/search?q=${currentSearchQuery}`"
-                        class="text-primary small text-decoration-none fw-semibold"
-                        @click="closeSearchDropdown"
-                    >
-                      <i class="bi bi-caret-right-fill">すべての結果を見る</i>
-                    </RouterLink>
-                  </div>
-
-                  <div class="search-results-list overflow-y-auto">
-                    <RouterLink
-                        v-for="chapter in searchStore.results"
-                        :key="chapter.uuid"
-                        :to="`/chapter/${chapter.uuid}`"
-                        class="search-result-item text-decoration-none"
-                        @click="closeSearchDropdown"
-                    >
-                      <img
-                          :src="chapter.coverArtworkUrl"
-                          :alt="chapter.title"
-                          class="search-result-cover"
-                      />
-
-                      <div class="search-result-content">
-                        <div class="fw-bold text-dark text-truncate mb-2">
-                          {{ chapter.title }}
-                          <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2 py-1 fw-semibold">
-                        第{{ chapter.chapterNumber }}話
-                      </span>
-                        </div>
-
-                        <div class="mb-2">
-                        <span class="text-secondary ms-2">
-                        {{ chapter.secondTitle }}
-                          </span>
-                        </div>
-
-                        <div class="text-secondary small summary mt-1">
-                          {{ chapter.summary }}
-                        </div>
-
-                      </div>
-                    </RouterLink>
-                  </div>
-
-                </template>
-              </div>
+                  :query="currentSearchQuery"
+                  :results="discoverySearchStore.results"
+                  :history="discoverySearchStore.history"
+                  :is-loading="discoverySearchStore.isLoading"
+                  :highlighted-index="highlightedResultIndex"
+                  @select-history="handleHistorySearch"
+                  @clear-history="discoverySearchStore.clearHistory"
+                  @view-all="handleViewAllResults"
+                  @select-result="closeSearchDropdown"
+              />
             </Transition>
           </li>
 
@@ -159,39 +108,172 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
 
 import LogoComponent from "@/components/ui/LogoComponent.vue";
 import DiscoveryBar from "@/components/layout/DiscoveryBar.vue";
 import FormSearch from "@/components/ui/FormSearch.vue";
 import AuthActions from "@/components/user/AuthActions.vue";
+import SearchResultsDropdown from "@/components/layout/SearchResultsDropdown.vue";
 
 import {useUserStore} from "@/stores/User";
-import {useSearchStore} from "@/stores/Search";
+import {useDiscoverySearchStore} from "@/stores/DiscoverySearch";
 
 const authStore = useUserStore();
-const searchStore = useSearchStore();
+const discoverySearchStore = useDiscoverySearchStore();
+
+const route = useRoute();
+const router = useRouter();
 
 const searchContainer = ref<HTMLElement | null>(null);
+
 const isSearchDropdownVisible = ref(false);
+
+const currentSearchQuery = ref(
+    String(route.query.q ?? "").trim()
+);
+
+const highlightedResultIndex = ref(-1);
+
+
+const handleSearch = (query: string) => {
+  currentSearchQuery.value = query;
+
+  isSearchDropdownVisible.value = true;
+  highlightedResultIndex.value = -1;
+
+  discoverySearchStore.search(query);
+};
 
 
 const handleSearchFocus = () => {
-  if (searchStore.results.length > 0) {
+  if (
+      currentSearchQuery.value ||
+      discoverySearchStore.history.length > 0
+  ) {
     isSearchDropdownVisible.value = true;
   }
 };
 
-const handleSearchClear = () => {
-  isSearchDropdownVisible.value = false;
-  searchStore.clearResults();
+
+const handleViewAllResults = async () => {
+  const query = currentSearchQuery.value.trim();
+
+  if (!query) {
+    return;
+  }
+
+  discoverySearchStore.addToHistory(query);
+
+  closeSearchDropdown();
+
+  await router.push({
+    name: "search-results",
+    query: {
+      q: query,
+    },
+  });
+};
+
+const handleHistorySearch = async (query: string) => {
+  currentSearchQuery.value = query;
+  highlightedResultIndex.value = -1;
+
+  isSearchDropdownVisible.value = true;
+
+  await discoverySearchStore.search(query);
 };
 
 const closeSearchDropdown = () => {
   isSearchDropdownVisible.value = false;
+  highlightedResultIndex.value = -1;
 };
 
-const handleClickOutside = (event: MouseEvent) => {
+
+const handleSearchClear = () => {
+  isSearchDropdownVisible.value = false;
+  highlightedResultIndex.value = -1;
+
+  discoverySearchStore.clearResults();
+};
+
+
+const handleSearchEscape = () => {
+  closeSearchDropdown();
+};
+
+const handleSearchNavigate = (
+    direction: "up" | "down"
+) => {
+  if (discoverySearchStore.results.length === 0) {
+    return;
+  }
+
+  if (!isSearchDropdownVisible.value) {
+    isSearchDropdownVisible.value = true;
+  }
+
+  const totalResults =
+      discoverySearchStore.results.length;
+
+  if (direction === "down") {
+    highlightedResultIndex.value =
+        highlightedResultIndex.value >= totalResults - 1
+            ? 0
+            : highlightedResultIndex.value + 1;
+  }
+
+  if (direction === "up") {
+    highlightedResultIndex.value =
+        highlightedResultIndex.value <= 0
+            ? totalResults - 1
+            : highlightedResultIndex.value - 1;
+  }
+};
+
+const handleSearchSubmit = async (
+    query: string
+) => {
+
+  if (highlightedResultIndex.value >= 0) {
+
+    const selectedChapter =
+        discoverySearchStore.results[
+            highlightedResultIndex.value
+            ];
+
+    if (selectedChapter) {
+
+      closeSearchDropdown();
+
+      await router.push({
+        name: "chapter-details",
+        params: {
+          chapterUuid: selectedChapter.uuid
+        },
+      });
+
+      return;
+    }
+  }
+
+  discoverySearchStore.addToHistory(query);
+
+  closeSearchDropdown();
+
+  await router.push({
+    name: "search-results",
+    query: {
+      q: query
+    },
+  });
+};
+
+const handleClickOutside = (
+    event: MouseEvent
+) => {
+
   const target = event.target;
 
   if (
@@ -202,19 +284,30 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 };
 
-const currentSearchQuery = ref('');
+watch(
+    () => route.query.q,
+    (newQuery) => {
 
-const handleSearch = (query: string) => {
-  currentSearchQuery.value = query;
-  isSearchDropdownVisible.value = true;
-  searchStore.search(query);
-};
+      currentSearchQuery.value =
+          String(newQuery ?? "").trim();
+
+    },
+    {
+      immediate: true,
+    }
+);
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
+  document.addEventListener(
+      "click",
+      handleClickOutside
+  );
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener(
+      "click",
+      handleClickOutside
+  );
 });
 </script>
