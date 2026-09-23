@@ -1,21 +1,41 @@
 import {api} from "@/plugins/gateway";
-import {Chapter} from "@/models/Chapter";
+import type {Chapter} from "@/models/Chapter";
 import {mapSearchChapter} from "@/mappers/SearchChapterMapper";
-import type {SearchChapterDTO} from "@/types/search/SearchChapterDTO";
+import {mapSearchPagination} from "@/mappers/SearchPaginationMapper";
+
+import type {SearchResponseDTO} from "@/types/search/SearchResponseDTO";
+
+export interface SearchPagination {
+    currentPage: number;
+    totalPages: number;
+    totalElements: number;
+    isFirst: boolean;
+    isLast: boolean;
+    pageSize: number;
+}
+
+export interface SearchResponse {
+    results: Chapter[];
+    pagination: SearchPagination;
+}
 
 export class SearchService {
 
-    static async search(query: string): Promise<Chapter[]> {
-        const response = await api.get("/search", {
+    static async search(query: string, page: number, size: number): Promise<SearchResponse> {
+
+        const response = await api.get<SearchResponseDTO>("/search", {
             params: {
                 q: query,
-                page: 1,
-                size: 6,
+                page: page + 1,
+                size,
             },
         });
 
-        return response.data.items.map(
-            (item: SearchChapterDTO) => mapSearchChapter(item)
-        );
+        const data = response.data;
+
+        return {
+            results: data.items.map(mapSearchChapter),
+            pagination: mapSearchPagination(data),
+        };
     }
 }
