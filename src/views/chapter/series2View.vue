@@ -5,7 +5,7 @@
       <div class="col-12">
         <div class="d-flex align-items-center justify-content-between">
 
-          <div class="ps-3 border-start border-primary border-4">
+          <div class="ps-3 border-start border-primary border-5">
             <h1 class="fw-bold text-dark mb-0 h2">
               全巻一覧
             </h1>
