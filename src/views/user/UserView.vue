@@ -4,7 +4,6 @@
       <div class="col-md-4 mb-4">
         <UserProfile/>
       </div>
-
       <div class="col-md-8">
         <div class="row g-lg-7 justify-content-center">
           <h4 class="mb-4">最近の貸出履歴</h4>
