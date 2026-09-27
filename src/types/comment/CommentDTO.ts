@@ -1,10 +1,10 @@
 export interface CommentDTO {
-    userName: string;
-    chapterUuid: string;
-    commentUuid: string;
-    avatar_URL: string;
+    user_name: string;
+    chapter_uuid: string;
+    comment_uuid: string;
+    avatar_url: string;
     content: string;
-    deletedAt: string | null;
-    createdAt: string;
-    updatedAt: string | null;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string | null;
 }
