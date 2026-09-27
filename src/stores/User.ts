@@ -58,10 +58,11 @@ export const useUserStore = defineStore('user', () => {
         isLoading.value = true;
 
         try {
-            const {user, token: accessToken} =
-                await AuthFlowService.login(email, password);
+            const accessToken = await AuthFlowService.login(email, password);
 
-            authenticate(user, accessToken);
+            authenticate(accessToken);
+
+            currentUser.value = await AuthService.getProfile();
 
             borrowHistory.value = await RecordService.getRecords(0, 5);
 
@@ -71,23 +72,19 @@ export const useUserStore = defineStore('user', () => {
     }
 
     async function register(user_name: string, email: string, password: string, password_confirmation: string) {
-
         isLoading.value = true;
         authError.value = null;
 
         try {
+            const accessToken = await AuthService.signUp(user_name, email, password, password_confirmation);
 
-            const {
-                token: accessToken,
-                user
-            } = await AuthService.signUp(user_name, email, password, password_confirmation);
+            authenticate(accessToken);
 
-            authenticate(user, accessToken);
+            currentUser.value = await AuthService.getProfile();
 
             borrowHistory.value = createEmptyBorrowHistory();
 
         } catch (error: any) {
-
             if (error.response?.status === 422) {
                 validationErrors.value =
                     mapValidationErrors(error.response.data.errors);
@@ -130,9 +127,8 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    function authenticate(user: User, accessToken: string) {
+    function authenticate(accessToken: string) {
         token.value = accessToken;
-        currentUser.value = user;
         localStorage.setItem("user_token", accessToken);
     }
 
