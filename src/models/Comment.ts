@@ -7,10 +7,10 @@ export class Comment {
     private _createdAt: string;
     private _updatedAt: string | null = null;
     private _userName: string;
-    private _avatar_URL: string;
+    private _avatarUrl: string | null;
 
 
-    constructor(chapterUuid: string, commentUuid: string, content: string, deletedAt: string | null, createdAt: string, updatedAt: string | null, userName: string, avatar_URL: string) {
+    constructor(chapterUuid: string, commentUuid: string, content: string, deletedAt: string | null, createdAt: string, updatedAt: string | null, userName: string, avatarUrl: string | null) {
         this._chapterUuid = chapterUuid;
         this._commentUuid = commentUuid;
         this._content = content;
@@ -18,7 +18,7 @@ export class Comment {
         this._createdAt = createdAt;
         this._updatedAt = updatedAt;
         this._userName = userName;
-        this._avatar_URL = avatar_URL;
+        this._avatarUrl = avatarUrl;
     }
 
 
@@ -79,11 +79,11 @@ export class Comment {
         this._userName = value;
     }
 
-    get avatar_URL(): string {
-        return this._avatar_URL;
+    get avatarUrl(): string | null {
+        return this._avatarUrl;
     }
 
-    set avatar_URL(value: string) {
-        this._avatar_URL = value;
+    set avatarUrl(value: string | null) {
+        this._avatarUrl = value;
     }
 }
