@@ -3,10 +3,10 @@ export class User {
     private _card_uuid: string;
     private _name: string;
     private _email: string;
-    private _avatar_img_url: string;
-    private _last_logged_in_at: string;
+    private _avatar_img_url: string | null;
+    private _last_logged_in_at: string | null;
 
-    constructor(cardUuid: string, name: string, email: string, avatarImgUrl: string, lastLoggedInAt: string) {
+    constructor(cardUuid: string, name: string, email: string, avatarImgUrl: string | null, lastLoggedInAt: string | null) {
         this._card_uuid = cardUuid;
         this._name = name;
         this._email = email;
@@ -39,19 +39,19 @@ export class User {
         this._email = value;
     }
 
-    get avatar_img_url(): string {
+    get avatar_img_url(): string | null {
         return this._avatar_img_url;
     }
 
-    set avatar_img_url(value: string) {
+    set avatar_img_url(value: string | null) {
         this._avatar_img_url = value;
     }
 
-    get last_logged_in_at(): string {
+    get last_logged_in_at(): string | null {
         return this._last_logged_in_at;
     }
 
-    set last_logged_in_at(value: string) {
+    set last_logged_in_at(value: string | null) {
         this._last_logged_in_at = value;
     }
 }
