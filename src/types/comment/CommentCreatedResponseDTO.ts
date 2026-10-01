@@ -1,11 +1,5 @@
+import type {CommentDTO} from "@/types/comment/CommentDTO";
+
 export interface CommentCreatedResponseDTO {
-    member_card_uuid?: string;
-    user_name: string;
-    chapter_uuid: string;
-    comment_uuid: string;
-    avatar_url: string;
-    content: string;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string | null;
+    props: CommentDTO;
 }
