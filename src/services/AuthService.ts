@@ -1,4 +1,7 @@
 import {api} from "@/plugins/gateway";
+import {mapUser} from "@/mappers/UserMapper";
+import {User} from "@/models/User";
+import type {UserResponse} from "@/types/auth/UserResponse";
 
 export class AuthService {
 
@@ -31,9 +34,9 @@ export class AuthService {
         return response.data.access_token;
     }
 
-    static async getProfile() {
-        const response = await api.get("/auth/profile");
+    static async getProfile(): Promise<User> {
+        const response = await api.get<UserResponse>("/auth/profile");
 
-        return response.data;
+        return mapUser(response.data);
     }
 }
