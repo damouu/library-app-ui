@@ -139,7 +139,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useCommentStore} from "@/stores/Comment";
 import {useUserStore} from "@/stores/User";
 
@@ -149,25 +149,21 @@ const userStore = useUserStore();
 const editingUuid = ref<string | null>(null);
 const editBuffer = ref<string>("");
 
-defineProps<{
+const props = defineProps<{
   chapterUuid: string,
   page: number,
   size: number,
 }>();
 
+
 const formatDate = (dateString: string) => {
   if (!dateString) return '';
-
   const date = new Date(dateString);
-
   return date.toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
   });
 };
+
 
 function startEdit(comment: any) {
   editingUuid.value = comment.commentUuid;
@@ -181,16 +177,11 @@ function cancelEdit() {
 
 async function handleUpdate(uuid: string) {
   const success = await commentStore.updateComment(uuid, editBuffer.value);
-
   if (success) {
-    const index = commentStore.commentsList.findIndex(
-        c => c.commentUuid === uuid
-    );
-
+    const index = commentStore.commentsList.findIndex(c => c.commentUuid === uuid);
     if (index !== -1) {
       commentStore.commentsList[index].content = editBuffer.value;
     }
-
     editingUuid.value = null;
   }
 }
@@ -198,6 +189,25 @@ async function handleUpdate(uuid: string) {
 async function deleteComment(commentUuid: string) {
   await commentStore.deleteComment(commentUuid);
 }
+
+const loadComments = async () => {
+  await commentStore.getChapter(
+      props.page,
+      props.size,
+      props.chapterUuid,
+  );
+};
+
+onMounted(() => {
+  loadComments();
+});
+
+watch(() => props.chapterUuid, async (newUuid) => {
+  if (newUuid) {
+    commentStore.commentsList = [];
+    await loadComments();
+  }
+});
 
 onUnmounted(() => {
   commentStore.commentsList = [];
