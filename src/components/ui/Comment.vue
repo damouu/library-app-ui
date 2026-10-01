@@ -67,7 +67,7 @@
             <div class="d-flex align-items-start">
               <div class="avatar-wrapper me-3">
                 <img
-                    :src="comment.avatar_URL || '/default-avatar.png'"
+                    :src="comment.avatarUrl || '/default-avatar.png'"
                     class="rounded-circle comment-avatar shadow-sm"
                     alt="Avatar"
                 >
@@ -204,12 +204,12 @@ onMounted(() => {
 
 watch(() => props.chapterUuid, async (newUuid) => {
   if (newUuid) {
-    commentStore.commentsList = null;
+    commentStore.commentsList = [];
     await loadComments();
   }
 });
 
 onUnmounted(() => {
-  commentStore.commentsList = null;
+  commentStore.commentsList = [];
 });
 </script>
