@@ -29,13 +29,12 @@ export class CommentService {
             }
         );
 
-        return mapComment(response.data);
+        return mapComment(response.data.props);
     }
 
     static async updateComment(uuid: string, content: string): Promise<void> {
 
-        await api.put(
-            `/comment/${uuid}`,
+        await api.put(`/comment/${uuid}`,
             {
                 comment: content
             }
