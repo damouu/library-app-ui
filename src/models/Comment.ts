@@ -1,7 +1,7 @@
 export class Comment {
 
     private _chapterUuid: string;
-    private _commentUuid: string | null = null;
+    private _commentUuid: string;
     private _content: string;
     private _deletedAt: string | null = null;
     private _createdAt: string;
@@ -31,7 +31,7 @@ export class Comment {
     }
 
 
-    get commentUuid(): string | null {
+    get commentUuid(): string {
         return this._commentUuid;
     }
 
